@@ -1,4 +1,3 @@
-import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Browse from "./pages/Browse";
 import MyAlbums from "./pages/MyAlbums";
@@ -10,7 +9,6 @@ function App() {
   return (
     <div>
       <Router>
-        <Navbar />
         <Routes>
           <Route exact path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />

@@ -1,15 +1,115 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "DM Sans", sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: #f4effa;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  --light-main-color: #f4effa;
+  --dark-main-color: #2f184b;
+  --middle-main-color: #9b72cf;
+  --middark-main-color: #532b88;
+  --midlight-main-color: #c8b1e4;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+/* Footer ---------------------------------------------------------------------------------------------------------------------*/
+.footer {
+  position: absolute;
+  bottom: 0.5rem;
+  width: 100%;
+}
+
+/* Login Container -----------------------------------------------------------------------------------------------------------*/
+.container-login {
+  background-image: url("./assets/LoginBG.svg");
+  height: 100vh;
+  padding-left: 10%;
+}
+
+.container-logo {
+  width: 810px;
+  height: auto;
+  padding-top: 10%;
+}
+
+.login-button {
+  width: 240px;
+  height: 60px;
+  background-color: var(--dark-main-color);
+  border-radius: 12px;
+  margin-left: 8px;
+}
+
+.spacer {
+  aspect-ratio: 1440/1024;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+/* Media Queries */
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 600px) {
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 600px) {
+  .container-logo {
+    width: 300px;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (max-width: 768px) {
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (max-width: 992px) {
+  .container-logo {
+    width: 500px;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1200px) {
+}
+
+/* Utility Classes */
+
+.hard-light {
+  mix-blend-mode: hard-light;
+}
+
+.flex {
+  display: flex;
+}
+
+.ai-center {
+  align-items: center;
+}
+
+.jc-center {
+  justify-content: center;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.row {
+  flex-direction: row;
+}
+
+.ta-center {
+  text-align: center;
 }
