@@ -66,6 +66,7 @@ function Navbar() {
       </nav>
       <main></main>
     </>
+
   );
 }
 
