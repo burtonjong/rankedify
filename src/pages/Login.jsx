@@ -1,6 +1,7 @@
+import PropTypes from "prop-types";
 import Footer from "../components/Footer";
 
-function Login() {
+function Login({ CLIENT_ID, REDIRECT_URI, AUTH_ENDPOINT, RESPONSE_TYPE }) {
   return (
     <>
       <div className="container-login spacer flex column">
@@ -24,12 +25,23 @@ function Login() {
           </svg>
         </div>
         <div className="login-button flex ai-center jc-center">
-          <h3>Login To Spotify</h3>
+          <a
+            href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}
+          >
+            <h3 className="login-text">Login To Spotify</h3>
+          </a>
         </div>
       </div>
       <Footer />
     </>
   );
 }
+
+Login.propTypes = {
+  CLIENT_ID: PropTypes.string.isRequired,
+  REDIRECT_URI: PropTypes.string.isRequired,
+  AUTH_ENDPOINT: PropTypes.string.isRequired,
+  RESPONSE_TYPE: PropTypes.string.isRequired,
+};
 
 export default Login;

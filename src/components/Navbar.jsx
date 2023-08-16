@@ -1,10 +1,22 @@
-function Navbar() {
+import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
+
+function Navbar({ setToken }) {
+  const navigate = useNavigate();
+
+  const logout = () => {
+    setToken("");
+    window.localStorage.removeItem("token");
+
+    navigate("/");
+  };
+
   return (
     <>
       <nav className="navbar">
         <ul className="nav-ul">
           <li className="logo">
-            <a href="#" className="nav-link">
+            <a href="/home" className="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path
                   fill="#91C8E4"
@@ -15,7 +27,7 @@ function Navbar() {
             </a>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link">
+            <a href="/home" className="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                 <path
                   className="svg-hover"
@@ -27,7 +39,7 @@ function Navbar() {
             </a>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link">
+            <a href="/myalbums" className="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <path
                   className="svg-hover"
@@ -39,7 +51,7 @@ function Navbar() {
             </a>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link">
+            <a href="browse" className="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <path
                   className="svg-hover"
@@ -51,7 +63,7 @@ function Navbar() {
             </a>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link">
+            <a href="#" className="nav-link" onClick={logout}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path
                   fill="#9b72cf"
@@ -59,14 +71,18 @@ function Navbar() {
                   d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
                 />
               </svg>
-              <span className="link-text">Profile</span>
+
+              <span className="link-text">Logout</span>
             </a>
           </li>
         </ul>
       </nav>
-      <main></main>
     </>
   );
 }
+
+Navbar.propTypes = {
+  setToken: PropTypes.func.isRequired,
+};
 
 export default Navbar;

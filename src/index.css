@@ -6,6 +6,8 @@
 
   color: #f4effa;
 
+  background: #c8b1e4;
+
   --transition-speed: 600ms;
 
   --text-primary: #f4effa;
@@ -17,6 +19,22 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--dark-main-color);
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: var(--dark-main-color);
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: var(--dark-main-color);
 }
 
 body {
@@ -119,6 +137,34 @@ main {
   transform: scaleX(-1);
 }
 
+/* Search Bar ---------------------------------------------------------------------------------------------------------------------*/
+
+.search {
+  font-family: "DM Sans", sans-serif;
+  justify-self: center;
+  border: none;
+  padding: 1.1rem 1.6rem;
+  font-size: 1.3rem;
+  border-radius: 0.7rem;
+  width: 40rem;
+  transition: all 0.3s;
+  color: var(--dark-main-color);
+  background-color: var(--middle-main-color);
+}
+
+.container-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.search:focus {
+  outline: none;
+  box-shadow: 0 2.4rem 2.4rem rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
 /* Footer ---------------------------------------------------------------------------------------------------------------------*/
 .footer {
   position: absolute;
@@ -155,6 +201,24 @@ main {
   background-size: cover;
 }
 
+.login-text {
+  text-decoration: none;
+}
+
+.failed {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Home Container -----------------------------------------------------------------------------------------------------------*/
+
+.container-home {
+  background-image: url("./assets/HomeBG.svg");
+  height: 100vh;
+}
+
 /* Media Queries */
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
@@ -175,6 +239,9 @@ main {
   .nav-link {
     justify-content: center;
   }
+  main {
+    margin: 0;
+  }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
@@ -192,10 +259,6 @@ main {
   .navbar:hover .link-text {
     display: inline;
     transition: opacity var(--transition-speed);
-  }
-
-  main {
-    margin: 0;
   }
 }
 
