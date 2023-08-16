@@ -78,6 +78,7 @@ function Navbar({ setToken }) {
         </ul>
       </nav>
     </>
+
   );
 }
 
