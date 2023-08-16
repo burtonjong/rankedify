@@ -3,7 +3,7 @@ function Navbar() {
     <div>
       <span>Home</span>
       <span>My Albums</span>
-      <span>Browse</span>
+      <span>BrowseIJSDFGIJFDKGJDFKP"GJKDFJG"P</span>
     </div>
   );
 }
