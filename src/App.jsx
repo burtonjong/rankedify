@@ -35,6 +35,8 @@ function App() {
     setToken(token);
   }, []);
 
+  console.log(token);
+
   return (
     <>
       <Router>
