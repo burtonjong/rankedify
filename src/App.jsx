@@ -31,8 +31,8 @@ function App() {
 
       window.location.hash = "";
       window.localStorage.setItem("token", token);
-      setToken(token);
     }
+    setToken(token);
   }, []);
 
   return (

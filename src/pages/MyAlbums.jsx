@@ -13,7 +13,7 @@ function MyAlbums({ token, setToken }) {
   };
   return (
     <div>
-      {token ? (
+      {!token ? (
         <div className="failed">
           <a href="#" onClick={logout}>
             <h1>Invalid token.</h1>
