@@ -1,25 +1,12 @@
 import PropTypes from "prop-types";
 import Navbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
+import Error from "../components/Error";
 
 function MyAlbums({ token, setToken }) {
-  const navigate = useNavigate();
-
-  const logout = () => {
-    setToken("");
-    window.localStorage.removeItem("token");
-
-    navigate("/");
-  };
   return (
     <div>
       {!token ? (
-        <div className="failed">
-          <a href="#" onClick={logout}>
-            <h1>Invalid token.</h1>
-            <h1>Please try and login again.</h1>
-          </a>
-        </div>
+        <Error setToken={setToken} />
       ) : (
         <>
           <Navbar setToken={setToken} />
