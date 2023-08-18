@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
-function Navbar({ setToken }) {
+function Navbar({ setToken, profile }) {
   const navigate = useNavigate();
 
   const logout = () => {
@@ -63,14 +63,19 @@ function Navbar({ setToken }) {
             </a>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link" onClick={logout}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                <path
-                  fill="#9b72cf"
+            <a href="#" className="nav-link profile-image" onClick={logout}>
+              {profile && profile.images && profile.images.length > 0 && (
+                <img
                   className="svg-hover"
-                  d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
+                  src={profile.images[0].url}
+                  alt="Profile"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    borderRadius: "50%",
+                  }}
                 />
-              </svg>
+              )}
 
               <span className="link-text">Logout</span>
             </a>
@@ -78,12 +83,12 @@ function Navbar({ setToken }) {
         </ul>
       </nav>
     </>
-
   );
 }
 
 Navbar.propTypes = {
   setToken: PropTypes.func.isRequired,
+  profile: PropTypes.any,
 };
 
 export default Navbar;

@@ -6,7 +6,7 @@
 
   color: #f4effa;
 
-  background: #c8b1e4;
+  background: #222831;
 
   --transition-speed: 600ms;
 
@@ -102,6 +102,10 @@ main {
   color: var(--text-primary);
 }
 
+.nav-link:last-child {
+  filter: grayscale(0%) opacity(1);
+}
+
 .link-text {
   display: none;
   margin-left: 1rem;
@@ -110,6 +114,10 @@ main {
 .nav-link svg {
   min-width: 2rem;
   margin: 0 1.5rem;
+}
+
+.nav-link img {
+  margin: 0 0.9rem;
 }
 
 .svg-hover {

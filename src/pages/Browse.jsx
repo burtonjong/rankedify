@@ -3,11 +3,11 @@ import Navbar from "../components/Navbar";
 import Search from "../components/Search";
 import Error from "../components/Error";
 
-function Browse({ token, setToken, query, setQuery }) {
+function Browse({ token, setToken, query, setQuery, profile }) {
   return (
     <div>
       {!token ? (
-        <Error setToken={setToken} />
+        <Error setToken={setToken} profile={profile} />
       ) : (
         <>
           <Navbar setToken={setToken} />
@@ -31,6 +31,7 @@ Browse.propTypes = {
   setToken: PropTypes.func.isRequired,
   query: PropTypes.string.isRequired,
   setQuery: PropTypes.func.isRequired,
+  profile: PropTypes.any,
 };
 
 export default Browse;
