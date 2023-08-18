@@ -266,6 +266,43 @@ main {
   }
 }
 
+/* Album container -----------------------------------------------------------------------------------------------------------*/
+
+.album-list {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  padding: 1rem 2rem 1rem 2rem;
+  background-color: var(--middark-main-color);
+  border-radius: 1rem;
+  box-shadow: 0 2.4rem 2.4rem rgba(0, 0, 0, 1);
+}
+
+.album-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.album-desc > h2 {
+  margin: 0;
+  margin-top: 0.5rem;
+}
+
+.album-container {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.album-img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
   .navbar {

@@ -11,6 +11,7 @@ function App() {
   const [query, setQuery] = useState("");
   const [token, setToken] = useState("");
   const [profile, setProfile] = useState(null);
+  const [albums, setAlbums] = useState([]);
 
   const CLIENT_ID = "135ae988dbca4981989bff22410cb627";
   const REDIRECT_URI = "http://localhost:5173/home";
@@ -65,6 +66,7 @@ function App() {
     });
 
     const data = await response.json();
+    // console.log(data);
     if (response.ok) {
       return data.access_token; // Return the new access token
     } else {
@@ -144,6 +146,8 @@ function App() {
                 query={query}
                 setQuery={setQuery}
                 profile={profile}
+                albums={albums}
+                setAlbums={setAlbums}
               />
             }
           />
