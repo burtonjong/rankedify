@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Navbar({ setToken, profile }) {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ function Navbar({ setToken, profile }) {
       <nav className="navbar">
         <ul className="nav-ul">
           <li className="logo">
-            <a href="/home" className="nav-link">
+            <Link to="/home" className="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path
                   fill="#91C8E4"
@@ -24,10 +24,10 @@ function Navbar({ setToken, profile }) {
                 />
               </svg>
               <span className="link-text">Rankedify</span>
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="/home" className="nav-link">
+            <Link to="/home" className="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                 <path
                   className="svg-hover"
@@ -36,10 +36,10 @@ function Navbar({ setToken, profile }) {
                 />
               </svg>
               <span className="link-text">Home</span>
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="/myalbums" className="nav-link">
+            <Link to="/myalbums" className="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <path
                   className="svg-hover"
@@ -48,10 +48,10 @@ function Navbar({ setToken, profile }) {
                 />
               </svg>
               <span className="link-text">My List</span>
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="browse" className="nav-link">
+            <Link to="/browse" className="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <path
                   className="svg-hover"
@@ -60,7 +60,7 @@ function Navbar({ setToken, profile }) {
                 />
               </svg>
               <span className="link-text">Browse</span>
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
             <a href="#" className="nav-link profile-image" onClick={logout}>

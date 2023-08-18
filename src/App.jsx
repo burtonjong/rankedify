@@ -12,6 +12,7 @@ function App() {
   const [token, setToken] = useState("");
   const [profile, setProfile] = useState(null);
   const [albums, setAlbums] = useState([]);
+  const [added, setAdded] = useState([]);
 
   const CLIENT_ID = "135ae988dbca4981989bff22410cb627";
   const REDIRECT_URI = "http://localhost:5173/home";
@@ -37,6 +38,10 @@ function App() {
       window.localStorage.setItem("token", token);
     }
     setToken(token);
+    const storedAddedAlbums = localStorage.getItem("addedAlbums");
+    if (storedAddedAlbums) {
+      setAdded(JSON.parse(storedAddedAlbums));
+    }
   }, []);
 
   console.log(token);
@@ -102,6 +107,27 @@ function App() {
     }
   }, [fetchUserProfile, token]);
 
+  function handleAdd(selectedAlbum) {
+    const newAddedAlbum = {
+      name: selectedAlbum.name,
+      image: selectedAlbum.images[0].url,
+      artist: selectedAlbum.artists[0].name,
+    };
+
+    // Use the updater function form of setAdded to ensure you're working with the latest state
+    const updatedAdded = [...added, newAddedAlbum];
+    setAdded(updatedAdded);
+    console.log(added);
+
+    localStorage.setItem("addedAlbums", JSON.stringify(updatedAdded));
+
+    console.log(updatedAdded);
+  }
+
+  useEffect(() => {
+    localStorage.setItem("lastQuery", query);
+  }, [query]);
+
   return (
     <>
       <Router>
@@ -134,7 +160,12 @@ function App() {
           <Route
             path="/myalbums"
             element={
-              <MyAlbums token={token} setToken={setToken} profile={profile} />
+              <MyAlbums
+                token={token}
+                setToken={setToken}
+                profile={profile}
+                addedAlbums={added}
+              />
             }
           />
           <Route
@@ -148,6 +179,7 @@ function App() {
                 profile={profile}
                 albums={albums}
                 setAlbums={setAlbums}
+                handleAdd={handleAdd}
               />
             }
           />

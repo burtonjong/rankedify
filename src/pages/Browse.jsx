@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Search from "../components/Search";
 import Error from "../components/Error";
 import Album from "../components/Album";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Browse({
   token,
@@ -13,15 +13,21 @@ function Browse({
   profile,
   setAlbums,
   albums,
+  handleAdd,
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
   useEffect(
     function () {
       const controller = new AbortController();
 
       async function fetchAlbums() {
         try {
+          setIsLoading(true);
+          setError("");
           const response = await fetch(
-            `https://api.spotify.com/v1/search?q=${query}&type=album&limit=12`,
+            `https://api.spotify.com/v1/search?q=${query}&type=album&market=US&limit=12`,
             {
               method: "GET",
               headers: {
@@ -37,25 +43,28 @@ function Browse({
 
           const data = await response.json();
 
-          console.log("Fetched Albums:", data);
+          console.log("Fetched Albums:", data.length);
 
-          // Adjust the property name based on the actual response structure
-          if (data.Response === "False") {
-            throw new Error("Album not Found");
+          if (data.albums.items.length === 0) {
+            setError("Album cannot be found");
+            setAlbums([]); // Clear the albums array when no albums are found
+          } else {
+            setIsLoading(false);
+            setAlbums(data.albums.items);
+            setError("");
           }
-
-          // Adjust the property name and structure based on the actual response
-          setAlbums(data.albums.items);
-          console.log(albums);
         } catch (err) {
           if (err.name !== "AbortError") {
-            console.error(err.message);
+            setError(err.message);
           }
+        } finally {
+          setIsLoading(false);
         }
       }
 
       if (query.length < 3) {
         setAlbums([]);
+        setError("");
         return;
       }
 
@@ -85,9 +94,15 @@ function Browse({
 
           <main>
             <div className="album-container">
-              {albums.map((album) => (
-                <Album album={album} key={album.id} />
-              ))}
+              {isLoading && <Loader />}
+
+              {!isLoading &&
+                !error &&
+                albums.map((album) => (
+                  <Album album={album} key={album.id} handleAdd={handleAdd} />
+                ))}
+
+              {error && <p className="error">{error}</p>}
             </div>
           </main>
         </>
@@ -104,6 +119,11 @@ Browse.propTypes = {
   profile: PropTypes.any,
   setAlbums: PropTypes.func.isRequired,
   albums: PropTypes.array.isRequired,
+  handleAdd: PropTypes.func.isRequired,
 };
 
 export default Browse;
+
+function Loader() {
+  return <p className="loader">Loading...</p>;
+}
