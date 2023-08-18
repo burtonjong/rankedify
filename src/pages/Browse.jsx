@@ -7,10 +7,10 @@ function Browse({ token, setToken, query, setQuery, profile }) {
   return (
     <div>
       {!token ? (
-        <Error setToken={setToken} profile={profile} />
+        <Error setToken={setToken} />
       ) : (
         <>
-          <Navbar setToken={setToken} />
+          <Navbar setToken={setToken} profile={profile} />
           <div className="container-search">
             <Search query={query} setQuery={setQuery} />
           </div>

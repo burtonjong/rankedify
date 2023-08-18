@@ -17,6 +17,7 @@ function App() {
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "token";
   const CLIENT_SECRET = "4195754e67d84c5592aa09d799685dd9";
+  const SCOPE = "user-read-recently-played user-library-read user-top-read";
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -76,8 +77,6 @@ function App() {
       try {
         const profileData = await fetchProfile(accessToken);
         setProfile(profileData);
-
-        console.log(profileData);
       } catch (error) {
         if (error.message === "Access token expired") {
           // Handle token refresh and retry the request
@@ -114,6 +113,7 @@ function App() {
                 REDIRECT_URI={REDIRECT_URI}
                 AUTH_ENDPOINT={AUTH_ENDPOINT}
                 RESPONSE_TYPE={RESPONSE_TYPE}
+                SCOPE={SCOPE}
               />
             }
           />

@@ -6,10 +6,10 @@ function MyAlbums({ token, setToken, profile }) {
   return (
     <div>
       {!token ? (
-        <Error setToken={setToken} profile={profile} />
+        <Error setToken={setToken} />
       ) : (
         <>
-          <Navbar setToken={setToken} />
+          <Navbar setToken={setToken} profile={profile} />
           <main>
             <div>
               <h1>MEOW</h1>

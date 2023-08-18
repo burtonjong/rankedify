@@ -1,7 +1,13 @@
 import PropTypes from "prop-types";
 import Footer from "../components/Footer";
 
-function Login({ CLIENT_ID, REDIRECT_URI, AUTH_ENDPOINT, RESPONSE_TYPE }) {
+function Login({
+  CLIENT_ID,
+  REDIRECT_URI,
+  AUTH_ENDPOINT,
+  RESPONSE_TYPE,
+  SCOPE,
+}) {
   return (
     <>
       <div className="container-login spacer flex column">
@@ -26,7 +32,7 @@ function Login({ CLIENT_ID, REDIRECT_URI, AUTH_ENDPOINT, RESPONSE_TYPE }) {
         </div>
         <div className="login-button flex ai-center jc-center">
           <a
-            href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}
+            href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}
           >
             <h3 className="login-text">Login To Spotify</h3>
           </a>
@@ -42,6 +48,7 @@ Login.propTypes = {
   REDIRECT_URI: PropTypes.string.isRequired,
   AUTH_ENDPOINT: PropTypes.string.isRequired,
   RESPONSE_TYPE: PropTypes.string.isRequired,
+  SCOPE: PropTypes.string.isRequired,
 };
 
 export default Login;

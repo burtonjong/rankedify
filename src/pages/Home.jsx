@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Error from "../components/Error";
 
 function Home({ token, setToken, profile }) {
+  console.log(profile);
   return (
     <div>
       {!token ? (
