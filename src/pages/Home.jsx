@@ -2,10 +2,12 @@ import PropTypes from "prop-types";
 import Navbar from "../components/Navbar";
 import Error from "../components/Error";
 
+import { useState } from "react";
+
 function Home({ token, setToken, profile, addedAlbums }) {
   const track = document.getElementById("image-track");
 
-  const handleOnDown = (e) => (track.dataset.mouseDownAt = e.clientX);
+  const handleOnDown = (e) => (track.dataset.mouseDownAt = e.clientY);
 
   const handleOnUp = () => {
     track.dataset.mouseDownAt = "0";
@@ -15,7 +17,7 @@ function Home({ token, setToken, profile, addedAlbums }) {
   const handleOnMove = (e) => {
     if (track.dataset.mouseDownAt === "0") return;
 
-    const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
+    const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientY,
       maxDelta = window.innerWidth / 2;
 
     const percentage = (mouseDelta / maxDelta) * -100,
@@ -27,7 +29,7 @@ function Home({ token, setToken, profile, addedAlbums }) {
 
     track.animate(
       {
-        transform: `translate(${nextPercentage}%, -50%)`,
+        transform: `translate(-50%, ${nextPercentage}%)`,
       },
       { duration: 1200, fill: "forwards" }
     );
@@ -35,7 +37,7 @@ function Home({ token, setToken, profile, addedAlbums }) {
     for (const image of track.getElementsByClassName("image")) {
       image.animate(
         {
-          objectPosition: `${100 + nextPercentage}% 50%`,
+          objectPosition: `50% ${100 + nextPercentage}%`,
         },
         { duration: 1200, fill: "forwards" }
       );
@@ -56,19 +58,20 @@ function Home({ token, setToken, profile, addedAlbums }) {
 
   window.ontouchmove = (e) => handleOnMove(e.touches[0]);
 
-  /* -- Had to add extra lines for touch events -- */
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [hovered, setHovered] = useState(false);
 
-  window.onmousedown = (e) => handleOnDown(e);
+  const handleMouseEnter = (index) => {
+    setHoveredIndex(index);
+    setHovered(true);
+    console.log(index);
+  };
 
-  window.ontouchstart = (e) => handleOnDown(e.touches[0]);
-
-  window.onmouseup = (e) => handleOnUp(e);
-
-  window.ontouchend = (e) => handleOnUp(e.touches[0]);
-
-  window.onmousemove = (e) => handleOnMove(e);
-
-  window.ontouchmove = (e) => handleOnMove(e.touches[0]);
+  const handleMouseLeave = () => {
+    setHoveredIndex(null);
+    setHovered(false);
+  };
 
   console.log(profile);
   return (
@@ -77,8 +80,18 @@ function Home({ token, setToken, profile, addedAlbums }) {
         <Error setToken={setToken} />
       ) : (
         <>
+          <div className="bg flex ai-center jc-center">
+            <img
+              className="blur"
+              src={addedAlbums[hoveredIndex]?.image}
+              alt={addedAlbums[hoveredIndex]?.name}
+            />
+          </div>
+
           <Navbar setToken={setToken} profile={profile} />
           <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
+            <h1 className="ta-center image-title">Check out your top 10.</h1>
+            <h2 className="ta-center image-title-small">Scroll down.</h2>
             {addedAlbums.slice(0, 10).map((album, index) => (
               <img
                 className="image"
@@ -86,6 +99,8 @@ function Home({ token, setToken, profile, addedAlbums }) {
                 src={album.image}
                 alt={album.name}
                 draggable="false"
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
               />
             ))}
           </div>
