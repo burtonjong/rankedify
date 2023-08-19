@@ -114,6 +114,9 @@ function App() {
       image: selectedAlbum.images[0].url,
       artist: selectedAlbum.artists[0].name,
       id: selectedAlbum.id,
+      release_date: selectedAlbum.release_date,
+      total_tracks: selectedAlbum.total_tracks,
+      external_urls: selectedAlbum.external_urls.spotify,
     };
 
     // Use the updater function form of setAdded to ensure you're working with the latest state

@@ -378,6 +378,44 @@ main {
   border-radius: 1rem;
 }
 
+/* Mylist container -----------------------------------------------------------------------------------------------------------*/
+
+.mylist-info {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mylist-container {
+  list-style: none;
+}
+
+.box {
+  width: 42rem;
+  max-width: 42rem;
+  background-color: var(--color-background-500);
+  border-radius: 0.9rem;
+  overflow: scroll;
+  position: relative;
+  padding: 1rem;
+}
+
+.box-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  padding: 1rem;
+  height: 100vh;
+}
+
+.list-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
 /* Media Queries */
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {

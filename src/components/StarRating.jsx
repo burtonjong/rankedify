@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 
@@ -9,6 +11,16 @@ const containerStyle = {
 
 const starContainerStyle = {
   display: "flex",
+};
+
+StarRating.propTypes = {
+  maxRating: PropTypes.number,
+  deafultRating: PropTypes.number,
+  color: PropTypes.string,
+  size: PropTypes.number,
+  messages: PropTypes.array,
+  className: PropTypes.string,
+  onSetRating: PropTypes.func,
 };
 
 export default function StarRating({
@@ -27,6 +39,7 @@ export default function StarRating({
   function handleRating(rating) {
     setRating(rating);
     onSetRating(rating);
+    console.log(id);
     localStorage.setItem(id, rating);
   }
 
