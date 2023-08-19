@@ -113,24 +113,39 @@ function Home({ token, setToken, profile, addedAlbums }) {
           <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
             {addedAlbums.length > 0 ? (
               <>
-                <h1 className="ta-center image-title" ref={ref}>
+                <h1 className="image-title" ref={ref}>
                   Check out your top 10.
                 </h1>
-                <h2 className="ta-center image-title-small">Scroll down.</h2>
+                <h2 className="image-title-small">Scroll down.</h2>
                 {addedAlbums.slice(0, 10).map((album, index) => (
                   <>
-                    <img
-                      className={`image user-select ${
-                        clickedIndex === index ? "clicked " : ""
-                      } ${hoveredIndex === index ? "hovered" : ""}`}
-                      key={index}
-                      src={album.image}
-                      alt={album.name}
-                      draggable="false"
-                      onMouseEnter={() => handleMouseEnter(index)}
-                      onMouseLeave={handleMouseLeave}
-                      onClick={() => handleImageClick(index)}
-                    />
+                    <div className="image-info">
+                      <img
+                        className={`image user-select ${
+                          clickedIndex === index ? "clicked " : ""
+                        } ${hoveredIndex === index ? "hovered" : ""}`}
+                        key={index}
+                        src={album.image}
+                        alt={album.name}
+                        draggable="false"
+                        onMouseEnter={() => handleMouseEnter(index)}
+                        onMouseLeave={handleMouseLeave}
+                        onClick={() => handleImageClick(index)}
+                      />
+                      {clickedIndex === index && (
+                        <>
+                          <div className="flex column">
+                            <h1>You rated this album a 10</h1>
+                            <h2>Your top 3 songs:</h2>
+                            <ul>
+                              <li>1. Meow</li>
+                              <li>2. Woof</li>
+                              <li>3. Bark</li>
+                            </ul>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </>
                 ))}
               </>

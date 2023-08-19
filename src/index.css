@@ -270,7 +270,7 @@ main {
 
 /* Home Container -----------------------------------------------------------------------------------------------------------*/
 
-#image-track > .image {
+.image-info > .image {
   width: 70vmin;
   height: 40vmin;
   object-fit: cover;
@@ -302,10 +302,11 @@ main {
   flex-direction: column;
   gap: 10vmin;
   position: absolute;
-  left: 50%;
+  left: 70%;
   top: 30%;
   transform: translate(-50%, 0%);
   user-select: none; /* -- Prevent image highlighting -- */
+  width: 75%;
 }
 
 .image-title {
@@ -324,14 +325,20 @@ main {
   cursor: pointer;
 }
 
-#image-track > .image.clicked {
+.image-info > .image.clicked {
   transform: translateX(-40%);
   height: 70vmin;
   margin: 10rem 0 10rem 0;
 }
 
-#image-track > .image.hovered {
+.image-info > .image.hovered {
   box-shadow: 0 20px 25px -5px white, 0 8px 10px -6px white;
+}
+
+.image-info {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 /* Album container -----------------------------------------------------------------------------------------------------------*/
