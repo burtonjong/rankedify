@@ -5,7 +5,7 @@ import Error from "../components/Error";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-function Home({ token, setToken, profile, addedAlbums }) {
+function Home({ token, setToken, profile, addedAlbums, userRating }) {
   const track = document.getElementById("image-track");
 
   const handleOnDown = (e) => (track.dataset.mouseDownAt = e.clientY);
@@ -92,6 +92,10 @@ function Home({ token, setToken, profile, addedAlbums }) {
     }
   }, [inView]);
 
+  useEffect(() => {
+    console.log(userRating);
+  }, [userRating]);
+
   return (
     <>
       {!token ? (
@@ -135,7 +139,10 @@ function Home({ token, setToken, profile, addedAlbums }) {
                       {clickedIndex === index && (
                         <>
                           <div className="flex column">
-                            <h1>You rated this album a 10</h1>
+                            <h1>
+                              You rated this album a{" "}
+                              {localStorage.getItem(album.id)}
+                            </h1>
                             <h2>Your top 3 songs:</h2>
                             <ul>
                               <li>1. Meow</li>
@@ -166,6 +173,7 @@ Home.propTypes = {
   setToken: PropTypes.func.isRequired,
   profile: PropTypes.any,
   addedAlbums: PropTypes.array.isRequired,
+  userRating: PropTypes.number.isRequired,
 };
 
 export default Home;

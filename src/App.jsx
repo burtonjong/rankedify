@@ -13,6 +13,7 @@ function App() {
   const [profile, setProfile] = useState(null);
   const [albums, setAlbums] = useState([]);
   const [added, setAdded] = useState([]);
+  const [userRating, setUserRating] = useState(0);
 
   const CLIENT_ID = "135ae988dbca4981989bff22410cb627";
   const REDIRECT_URI = "http://localhost:5173/home";
@@ -112,12 +113,12 @@ function App() {
       name: selectedAlbum.name,
       image: selectedAlbum.images[0].url,
       artist: selectedAlbum.artists[0].name,
+      id: selectedAlbum.id,
     };
 
     // Use the updater function form of setAdded to ensure you're working with the latest state
     const updatedAdded = [...added, newAddedAlbum];
     setAdded(updatedAdded);
-    console.log(added);
 
     localStorage.setItem("addedAlbums", JSON.stringify(updatedAdded));
 
@@ -127,6 +128,13 @@ function App() {
   useEffect(() => {
     localStorage.setItem("lastQuery", query);
   }, [query]);
+
+  useEffect(() => {
+    const savedRating = localStorage.getItem("userRating");
+    if (savedRating) {
+      setUserRating(parseInt(savedRating, 10));
+    }
+  }, []);
 
   return (
     <>
@@ -155,6 +163,8 @@ function App() {
                 setToken={setToken}
                 profile={profile}
                 addedAlbums={added}
+                userRating={Number(userRating)}
+                setUserRating={setUserRating}
               />
             }
           />
@@ -166,6 +176,8 @@ function App() {
                 setToken={setToken}
                 profile={profile}
                 addedAlbums={added}
+                setUserRating={setUserRating}
+                userRating={userRating}
               />
             }
           />
