@@ -69,6 +69,7 @@ main {
   position: fixed;
   background-color: var(--dark-main-color);
   transition: width 200ms ease;
+  z-index: 9999;
 }
 
 .nav-ul {
@@ -269,9 +270,9 @@ main {
 
 /* Home Container -----------------------------------------------------------------------------------------------------------*/
 
-#image-track > .top-image {
-  width: 40vmin;
-  height: 56vmin;
+#image-track > .image {
+  width: 45vmin;
+  height: 70vmin;
   object-fit: cover;
   object-position: 100% center;
 }

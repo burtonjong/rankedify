@@ -21,7 +21,7 @@ function Home({ token, setToken, profile, addedAlbums }) {
     const percentage = (mouseDelta / maxDelta) * -100,
       nextPercentageUnconstrained =
         parseFloat(track.dataset.prevPercentage) + percentage,
-      nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 5), -100);
+      nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
 
     track.dataset.percentage = nextPercentage;
 
@@ -35,12 +35,26 @@ function Home({ token, setToken, profile, addedAlbums }) {
     for (const image of track.getElementsByClassName("image")) {
       image.animate(
         {
-          objectPosition: `${100 + nextPercentage}% center`,
+          objectPosition: `${100 + nextPercentage}% 50%`,
         },
         { duration: 1200, fill: "forwards" }
       );
     }
   };
+
+  /* -- Had to add extra lines for touch events -- */
+
+  window.onmousedown = (e) => handleOnDown(e);
+
+  window.ontouchstart = (e) => handleOnDown(e.touches[0]);
+
+  window.onmouseup = (e) => handleOnUp(e);
+
+  window.ontouchend = (e) => handleOnUp(e.touches[0]);
+
+  window.onmousemove = (e) => handleOnMove(e);
+
+  window.ontouchmove = (e) => handleOnMove(e.touches[0]);
 
   /* -- Had to add extra lines for touch events -- */
 
@@ -67,7 +81,7 @@ function Home({ token, setToken, profile, addedAlbums }) {
           <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
             {addedAlbums.slice(0, 10).map((album, index) => (
               <img
-                className="top-image"
+                className="image"
                 key={index}
                 src={album.image}
                 alt={album.name}
