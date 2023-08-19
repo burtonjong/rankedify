@@ -154,6 +154,7 @@ function App() {
                 token={token}
                 setToken={setToken}
                 profile={profile}
+                addedAlbums={added}
               />
             }
           />

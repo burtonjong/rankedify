@@ -16,7 +16,7 @@ function Navbar({ setToken, profile }) {
       <nav className="navbar">
         <ul className="nav-ul">
           <li className="logo">
-            <Link to="/home" className="nav-link">
+            <a href="/home" className="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path
                   fill="#91C8E4"
@@ -24,10 +24,10 @@ function Navbar({ setToken, profile }) {
                 />
               </svg>
               <span className="link-text">Rankedify</span>
-            </Link>
+            </a>
           </li>
           <li className="nav-item">
-            <Link to="/home" className="nav-link">
+            <a href="/home" className="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                 <path
                   className="svg-hover"
@@ -36,7 +36,7 @@ function Navbar({ setToken, profile }) {
                 />
               </svg>
               <span className="link-text">Home</span>
-            </Link>
+            </a>
           </li>
           <li className="nav-item">
             <Link to="/myalbums" className="nav-link">
