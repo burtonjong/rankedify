@@ -66,7 +66,7 @@ function Navbar({ setToken, profile }) {
             <a href="#" className="nav-link profile-image" onClick={logout}>
               {profile && profile.images && profile.images.length > 0 && (
                 <img
-                  className="svg-hover"
+                  className="svg-hover user-select"
                   src={profile.images[0].url}
                   alt="Profile"
                   style={{

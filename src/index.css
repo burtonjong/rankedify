@@ -278,11 +278,6 @@ main {
   transition: all 0.5s ease;
 }
 
-#image-track > .image:hover {
-  height: 70vmin;
-  margin: 10rem 0 10rem 0;
-}
-
 .bg {
   width: 100%;
   height: 100vh;
@@ -296,8 +291,6 @@ main {
   -o-filter: blur(4px);
   -ms-filter: blur(4px);
   display: flex;
-  justify-content: center;
-  align-items: center;
 
   height: 100%;
   width: auto;
@@ -322,6 +315,23 @@ main {
 
 .image-title-small {
   margin: 0 0 25rem 0;
+}
+
+.image {
+  transition: box-shadow 0.3s;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+#image-track > .image.clicked {
+  transform: translateX(-40%);
+  height: 70vmin;
+  margin: 10rem 0 10rem 0;
+}
+
+#image-track > .image.hovered {
+  box-shadow: 0 20px 25px -5px white, 0 8px 10px -6px white;
 }
 
 /* Album container -----------------------------------------------------------------------------------------------------------*/
@@ -444,4 +454,8 @@ main {
 
 .ta-center {
   text-align: center;
+}
+
+.user-select {
+  user-select: none;
 }

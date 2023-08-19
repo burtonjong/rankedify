@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import Navbar from "../components/Navbar";
 import Error from "../components/Error";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 function Home({ token, setToken, profile, addedAlbums }) {
   const track = document.getElementById("image-track");
@@ -61,11 +62,11 @@ function Home({ token, setToken, profile, addedAlbums }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [hovered, setHovered] = useState(false);
+  const [clickedIndex, setClickedIndex] = useState(null);
 
   const handleMouseEnter = (index) => {
     setHoveredIndex(index);
     setHovered(true);
-    console.log(index);
   };
 
   const handleMouseLeave = () => {
@@ -73,36 +74,71 @@ function Home({ token, setToken, profile, addedAlbums }) {
     setHovered(false);
   };
 
-  console.log(profile);
+  const handleImageClick = (index) => {
+    setClickedIndex(index);
+    if (index === clickedIndex) {
+      setClickedIndex(null);
+    }
+  };
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+    triggerOnce: false,
+  });
+
+  useEffect(() => {
+    if (inView) {
+      setClickedIndex(null);
+    }
+  }, [inView]);
+
   return (
     <>
       {!token ? (
         <Error setToken={setToken} />
       ) : (
         <>
-          <div className="bg flex ai-center jc-center">
-            <img
-              className="blur"
-              src={addedAlbums[hoveredIndex]?.image}
-              alt={addedAlbums[hoveredIndex]?.name}
-            />
+          <div className="bg flex ai-center">
+            {inView ? null : (
+              <img
+                draggable="false  "
+                className="blur user-select"
+                src={addedAlbums[clickedIndex]?.image}
+                alt={addedAlbums[clickedIndex]?.name}
+              />
+            )}
           </div>
 
           <Navbar setToken={setToken} profile={profile} />
           <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
-            <h1 className="ta-center image-title">Check out your top 10.</h1>
-            <h2 className="ta-center image-title-small">Scroll down.</h2>
-            {addedAlbums.slice(0, 10).map((album, index) => (
-              <img
-                className="image"
-                key={index}
-                src={album.image}
-                alt={album.name}
-                draggable="false"
-                onMouseEnter={() => handleMouseEnter(index)}
-                onMouseLeave={handleMouseLeave}
-              />
-            ))}
+            {addedAlbums.length > 0 ? (
+              <>
+                <h1 className="ta-center image-title" ref={ref}>
+                  Check out your top 10.
+                </h1>
+                <h2 className="ta-center image-title-small">Scroll down.</h2>
+                {addedAlbums.slice(0, 10).map((album, index) => (
+                  <>
+                    <img
+                      className={`image user-select ${
+                        clickedIndex === index ? "clicked " : ""
+                      } ${hoveredIndex === index ? "hovered" : ""}`}
+                      key={index}
+                      src={album.image}
+                      alt={album.name}
+                      draggable="false"
+                      onMouseEnter={() => handleMouseEnter(index)}
+                      onMouseLeave={handleMouseLeave}
+                      onClick={() => handleImageClick(index)}
+                    />
+                  </>
+                ))}
+              </>
+            ) : (
+              <h1 className="ta-center image-title">
+                You dont have any albums yet.
+              </h1>
+            )}
           </div>
         </>
       )}
