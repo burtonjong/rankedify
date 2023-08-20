@@ -218,13 +218,13 @@ main {
 .container-login {
   background-image: url("./assets/LoginBG.svg");
   height: 100vh;
-  padding-left: 10%;
 }
 
 .container-logo {
   width: 810px;
   height: auto;
   padding-top: 10%;
+  padding-left: 10%;
 }
 
 .login-button {
@@ -232,7 +232,7 @@ main {
   height: 60px;
   background-color: var(--dark-main-color);
   border-radius: 12px;
-  margin-left: 8px;
+  margin-left: 150px;
 }
 
 .spacer {
@@ -266,6 +266,75 @@ main {
 
 .error-message > h1 {
   color: var(--text-primary);
+}
+
+.wave-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: url('../src/assets/login-wave.png');
+  background-size: 1000px 100px;
+}
+
+.wave.wave1 {
+  animation: animate1 30s linear infinite;
+  z-index: 1000;
+  opacity: 1;
+  animation-delay: 0s;
+  bottom: 0;
+}
+
+.wave.wave2 {
+  animation: animate2 15s linear infinite;
+  z-index: 999;
+  opacity: 0.5;
+  animation-delay: -5s;
+  bottom: 10px;
+}
+
+.wave.wave3 {
+  animation: animate1 30s linear infinite;
+  z-index: 998;
+  opacity: 0.3;
+  animation-delay: -3s;
+  bottom: 15px;
+}
+
+.wave.wave4 {
+  animation: animate2 15s linear infinite;
+  z-index: 997;
+  opacity: 0.1;
+  animation-delay: -7s;
+  bottom: 20px;
+}
+
+@keyframes animate1 {
+  0% {
+    background-position-x: 0;
+  }
+
+  100% {
+    background-position: 1000px;
+  }
+}
+
+@keyframes animate2 {
+  0% {
+    background-position-x: 0;
+  }
+
+  100% {
+    background-position: -1000px;
+  }
 }
 
 /* Home Container -----------------------------------------------------------------------------------------------------------*/

@@ -37,6 +37,12 @@ function Login({
             <h3 className="login-text">Login To Spotify</h3>
           </a>
         </div>
+        <section className="wave-section">
+          <div className="wave wave1"></div>
+          <div className="wave wave2"></div>
+          <div className="wave wave3"></div>
+          <div className="wave wave4"></div>
+        </section>  
       </div>
       <Footer />
     </>
