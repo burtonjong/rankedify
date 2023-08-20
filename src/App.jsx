@@ -117,6 +117,7 @@ function App() {
       release_date: selectedAlbum.release_date,
       total_tracks: selectedAlbum.total_tracks,
       external_urls: selectedAlbum.external_urls.spotify,
+      clicked: true,
     };
 
     // Use the updater function form of setAdded to ensure you're working with the latest state
@@ -196,6 +197,7 @@ function App() {
                 albums={albums}
                 setAlbums={setAlbums}
                 handleAdd={handleAdd}
+                addedAlbums={added}
               />
             }
           />

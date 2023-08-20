@@ -14,6 +14,7 @@ function Browse({
   setAlbums,
   albums,
   handleAdd,
+  addedAlbums,
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -98,8 +99,14 @@ function Browse({
 
               {!isLoading &&
                 !error &&
-                albums.map((album) => (
-                  <Album album={album} key={album.id} handleAdd={handleAdd} />
+                albums.map((album, index) => (
+                  <Album
+                    album={album}
+                    index={index} // Pass the index as a prop
+                    key={album.id}
+                    handleAdd={handleAdd}
+                    addedAlbums={addedAlbums}
+                  />
                 ))}
 
               {error && <p className="error">{error}</p>}
@@ -120,6 +127,7 @@ Browse.propTypes = {
   setAlbums: PropTypes.func.isRequired,
   albums: PropTypes.array.isRequired,
   handleAdd: PropTypes.func.isRequired,
+  addedAlbums: PropTypes.array.isRequired,
 };
 
 export default Browse;
