@@ -1,26 +1,13 @@
 import PropTypes from "prop-types";
-import StarRating from "../components/StarRating";
 
-function StoredAlbum({ album, setUserRating, onSelectAlbum }) {
+function StoredAlbum({ album, onSelectAlbum }) {
   return (
     <>
-      <li className="mylist-info" onClick={onSelectAlbum}>
+      <li onClick={onSelectAlbum}>
         <img className="list-img" src={album.image} />
-        <div className="flex column">
-          <h4 className="ta-center">{album.name}</h4>
-          <h4 className="ta-center">{album.artist}</h4>
-        </div>
-        <div>
-          {localStorage.getItem(album.id) ? (
-            <h1>You rated this album a {localStorage.getItem(album.id)}</h1>
-          ) : (
-            <StarRating
-              maxRating={10}
-              size={24}
-              onSetRating={setUserRating}
-              id={album.id}
-            />
-          )}
+        <div className="flex row">
+          <h4>{album.name}</h4>
+          <h4>{album.artist}</h4>
         </div>
       </li>
     </>

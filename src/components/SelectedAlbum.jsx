@@ -1,22 +1,38 @@
 import PropTypes from "prop-types";
 import StarRating from "./StarRating";
 
-function SelectedAlbum({ selectedAlbum, setUserRating }) {
+function SelectedAlbum({ selectedAlbum, setUserRating, selected }) {
   console.log(selectedAlbum);
+
   return (
-    <h1>
-      {selectedAlbum.name}
-      {localStorage.getItem(selectedAlbum.id) ? (
-        <p>You rated this album a {localStorage.getItem(selectedAlbum.id)}</p>
+    <>
+      {selected ? (
+        <div>
+          <img
+            className="selected-image"
+            src={selectedAlbum.image}
+            alt={`${selectedAlbum.name}'s album cover`}
+          />
+          <h1>{selectedAlbum.name}</h1>
+          {localStorage.getItem(selectedAlbum.id) ? (
+            <h1>
+              You rated this album a {localStorage.getItem(selectedAlbum.id)}
+            </h1>
+          ) : (
+            <StarRating
+              maxRating={10}
+              size={24}
+              onSetRating={setUserRating}
+              id={selectedAlbum.id}
+            />
+          )}
+        </div>
       ) : (
-        <StarRating
-          maxRating={10}
-          size={24}
-          onSetRating={setUserRating}
-          id={selectedAlbum.id}
-        />
+        <div className="alternate-text">
+          <h1>Choose an album to rate.</h1>
+        </div>
       )}
-    </h1>
+    </>
   );
 }
 
@@ -25,4 +41,5 @@ export default SelectedAlbum;
 SelectedAlbum.propTypes = {
   selectedAlbum: PropTypes.any,
   setUserRating: PropTypes.func.isRequired,
+  selected: PropTypes.bool.isRequired,
 };

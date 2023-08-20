@@ -46,15 +46,15 @@ body {
   width: 100vw;
 }
 
-body::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 0.25rem;
 }
 
-body::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   background: #1e1e24;
 }
 
-body::-webkit-scrollbar-thumb {
+*:-webkit-scrollbar-thumb {
   background: var(--middle-main-color);
 }
 
@@ -314,6 +314,10 @@ main {
   margin-bottom: 0;
 }
 
+.moved {
+  transform: translateX(-25%);
+}
+
 .image-title-small {
   margin: 0 0 25rem 0;
 }
@@ -357,6 +361,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  align-items: center;
 }
 
 .album-desc > h2 {
@@ -380,31 +385,27 @@ main {
 
 /* Mylist container -----------------------------------------------------------------------------------------------------------*/
 
-.mylist-info {
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.mylist-container {
-  list-style: none;
-}
-
 .box {
   width: 42rem;
   max-width: 42rem;
-  background-color: var(--color-background-500);
+  background-color: var(--middle-main-color);
   border-radius: 0.9rem;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   position: relative;
-  padding: 1rem;
+}
+
+.alternate-text {
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .box-container {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  justify-content: center;
+  gap: 5rem;
   padding: 1rem;
   height: 100vh;
 }
@@ -414,6 +415,67 @@ main {
   height: 100px;
   object-fit: cover;
   border-radius: 1rem;
+}
+
+.list {
+  list-style: none;
+  padding: 0.8rem 0;
+  overflow: hidden;
+}
+
+.list li {
+  position: relative;
+  display: flex;
+  column-gap: 2.4rem;
+  font-size: 1.6rem;
+  align-items: center;
+  padding: 1.6rem 3.2rem;
+  border-bottom: 1px solid var(--middark-main-color);
+}
+
+.list.list-albums li {
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.list.list-albums li:hover {
+  background-color: var(--middark-main-color);
+}
+
+.list h3 {
+  font-size: 1.8rem;
+}
+
+.list div {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+}
+
+.list p {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.selected-image {
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 1rem;
+  margin-top: 3rem;
+}
+
+.box-selected {
+  width: 42rem;
+  max-width: 42rem;
+  background-color: var(--middle-main-color);
+  border-radius: 0.9rem;
+  overflow: scroll;
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 /* Media Queries */

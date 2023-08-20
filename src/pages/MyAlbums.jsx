@@ -10,9 +10,11 @@ function MyAlbums({ token, setToken, profile, setUserRating }) {
     JSON.parse(localStorage.getItem("addedAlbums")) || [];
 
   const [selectedAlbum, setSelectedAlbum] = useState([]);
+  const [selected, setSelected] = useState(false);
 
   const handleClick = (album) => {
     setSelectedAlbum(album);
+    setSelected(true);
   };
 
   useEffect(() => {}, [selectedAlbum]);
@@ -26,7 +28,7 @@ function MyAlbums({ token, setToken, profile, setUserRating }) {
           <Navbar setToken={setToken} profile={profile} />
           <main className="box-container">
             <div className="box">
-              <ul className="mylist-container">
+              <ul className="list list-albums">
                 {storedAddedAlbums.map((album, index) => (
                   <StoredAlbum
                     key={index}
@@ -39,10 +41,11 @@ function MyAlbums({ token, setToken, profile, setUserRating }) {
               </ul>
             </div>
 
-            <div className="box">
+            <div className="box-selected">
               <SelectedAlbum
                 selectedAlbum={selectedAlbum}
                 setUserRating={setUserRating}
+                selected={selected}
               />
             </div>
           </main>

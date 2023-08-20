@@ -157,7 +157,7 @@ function Home({ token, setToken, profile, addedAlbums, userRating }) {
                 ))}
               </>
             ) : (
-              <h1 className="ta-center image-title">
+              <h1 className="ta-center image-title moved">
                 You dont have any albums yet.
               </h1>
             )}
