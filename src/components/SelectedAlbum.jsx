@@ -21,7 +21,7 @@ function SelectedAlbum({ selectedAlbum, setUserRating, selected }) {
           ) : (
             <StarRating
               maxRating={10}
-              size={24}
+              size={38}
               onSetRating={setUserRating}
               id={selectedAlbum.id}
             />
