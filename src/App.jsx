@@ -90,6 +90,7 @@ function App() {
           // Handle token refresh and retry the request
           try {
             const newToken = await refreshToken(token); // Pass the current token
+            console.log("error fetching profile, retrying with new token");
             fetchUserProfile(newToken);
           } catch (refreshError) {
             console.error("Error refreshing token:", refreshError);
