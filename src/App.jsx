@@ -50,15 +50,6 @@ function App() {
 
   // console.log(token);
 
-  async function fetchProfile(accessToken) {
-    const result = await fetch("https://api.spotify.com/v1/me", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-
-    return await result.json();
-  }
-
   async function refreshToken(refreshToken) {
     const tokenEndpoint = "https://accounts.spotify.com/api/token";
 
@@ -128,19 +119,29 @@ function App() {
     updateAddedInFirestore();
   }, [added]);
 
-  const fetchUserProfile = useCallback(
-    async (accessToken) => {
+  useEffect(() => {
+    async function fetchProfile(accessToken) {
+      const result = await fetch("https://api.spotify.com/v1/me", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      return await result.json();
+    }
+
+    async function fetchUserProfile(accessToken) {
       try {
         const profileData = await fetchProfile(accessToken);
+        console.log(profileData);
         setProfile(profileData);
         console.log(profile);
 
         // Check if the user document exists in the Firestore database
-        const userDocRef = doc(db, "users", profile.id);
+        const userDocRef = doc(db, "users", profileData.id);
         console.log("Doc", userDocRef);
 
-        await setDoc(doc(db, "users", profile.id), {
-          addedAlbums: added, // if they dont exist
+        await setDoc(doc(db, "users", profileData.id), {
+          addedAlbums: added, // if they don't exist
         });
       } catch (error) {
         if (error.message === "Access token expired") {
@@ -156,15 +157,11 @@ function App() {
           console.error("Error fetching profile:", error);
         }
       }
-    },
-    [token]
-  );
-
-  useEffect(() => {
+    }
     if (token) {
       fetchUserProfile(token);
     }
-  }, [fetchUserProfile, token]);
+  }, [token]);
 
   function handleAdd(selectedAlbum) {
     const newAddedAlbum = {
