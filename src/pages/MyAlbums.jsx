@@ -3,21 +3,24 @@ import Navbar from "../components/Navbar";
 import Error from "../components/Error";
 import StoredAlbum from "../components/StoredAlbum";
 import SelectedAlbum from "../components/SelectedAlbum";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-function MyAlbums({ token, setToken, profile, setUserRating }) {
-  const storedAddedAlbums =
-    JSON.parse(localStorage.getItem("addedAlbums")) || [];
-
+function MyAlbums({
+  token,
+  setToken,
+  profile,
+  setUserRating,
+  addRatingToAlbum,
+  addedAlbums,
+}) {
   const [selectedAlbum, setSelectedAlbum] = useState([]);
   const [selected, setSelected] = useState(false);
 
   const handleClick = (album) => {
     setSelectedAlbum(album);
     setSelected(true);
+    console.log(addedAlbums);
   };
-
-  useEffect(() => {}, [selectedAlbum]);
 
   return (
     <div className="myalbum-container">
@@ -29,12 +32,12 @@ function MyAlbums({ token, setToken, profile, setUserRating }) {
           <main className="box-container">
             <div className="box">
               <ul className="list list-albums">
-                {storedAddedAlbums.map((album, index) => (
+                {addedAlbums.map((album, index) => (
                   <StoredAlbum
                     key={index}
                     album={album}
                     setUserRating={setUserRating}
-                    addedAlbums={storedAddedAlbums}
+                    addedAlbums={addedAlbums}
                     onSelectAlbum={() => handleClick(album)}
                   />
                 ))}
@@ -46,6 +49,8 @@ function MyAlbums({ token, setToken, profile, setUserRating }) {
                 selectedAlbum={selectedAlbum}
                 setUserRating={setUserRating}
                 selected={selected}
+                addRatingToAlbum={addRatingToAlbum}
+                addedAlbums={addedAlbums}
               />
             </div>
           </main>
@@ -60,6 +65,8 @@ MyAlbums.propTypes = {
   setToken: PropTypes.func.isRequired,
   profile: PropTypes.any,
   setUserRating: PropTypes.func.isRequired,
+  addRatingToAlbum: PropTypes.func.isRequired,
+  addedAlbums: PropTypes.array.isRequired,
 };
 
 export default MyAlbums;

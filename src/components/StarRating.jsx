@@ -32,6 +32,8 @@ export default function StarRating({
   defaultRating = 0,
   onSetRating,
   id,
+  addRatingToAlbum,
+  addedAlbums,
 }) {
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
@@ -40,7 +42,13 @@ export default function StarRating({
     setRating(rating);
     onSetRating(rating);
     console.log(id);
+
+    const test = addedAlbums.find((album) => album.id === id);
+    test.rating = rating;
+
     localStorage.setItem(id, rating);
+
+    addRatingToAlbum(id, rating);
   }
 
   const textStyle = {

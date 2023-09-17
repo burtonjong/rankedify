@@ -122,38 +122,34 @@ function Home({ token, setToken, profile, addedAlbums, userRating }) {
                 </h1>
                 <h2 className="image-title-small">Scroll down.</h2>
                 {addedAlbums.slice(0, 10).map((album, index) => (
-                  <>
-                    <div className="image-info">
-                      <img
-                        className={`image user-select ${
-                          clickedIndex === index ? "clicked " : ""
-                        } ${hoveredIndex === index ? "hovered" : ""}`}
-                        key={index}
-                        src={album.image}
-                        alt={album.name}
-                        draggable="false"
-                        onMouseEnter={() => handleMouseEnter(index)}
-                        onMouseLeave={handleMouseLeave}
-                        onClick={() => handleImageClick(index)}
-                      />
-                      {clickedIndex === index && (
-                        <>
-                          <div className="flex column">
-                            <h1>
-                              You rated this album a{" "}
-                              {localStorage.getItem(album.id)}
-                            </h1>
-                            <h2>Your top 3 songs:</h2>
-                            <ul>
-                              <li>1. Meow</li>
-                              <li>2. Woof</li>
-                              <li>3. Bark</li>
-                            </ul>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </>
+                  <div key={album.id} className="image-info">
+                    <img
+                      className={`image user-select ${
+                        clickedIndex === index ? "clicked " : ""
+                      } ${hoveredIndex === index ? "hovered" : ""}`}
+                      key={index}
+                      src={album.image}
+                      alt={album.name}
+                      draggable="false"
+                      onMouseEnter={() => handleMouseEnter(index)}
+                      onMouseLeave={handleMouseLeave}
+                      onClick={() => handleImageClick(index)}
+                    />
+                    {clickedIndex === index && (
+                      <div className="flex column">
+                        <h1>
+                          You rated this album a{" "}
+                          {localStorage.getItem(album.id)}
+                        </h1>
+                        <h2>Your top 3 songs:</h2>
+                        <ul>
+                          <li>1. Meow</li>
+                          <li>2. Woof</li>
+                          <li>3. Bark</li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 ))}
               </>
             ) : (

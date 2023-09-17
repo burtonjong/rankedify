@@ -7,13 +7,16 @@ import { useState, useEffect, useCallback } from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "../src/firebase.js";
+
 function App() {
   const [query, setQuery] = useState("");
   const [token, setToken] = useState("");
   const [profile, setProfile] = useState(null);
   const [albums, setAlbums] = useState([]);
   const [added, setAdded] = useState([]);
-  const [userRating, setUserRating] = useState(0);
+  const [userRating, setUserRating] = useState(null);
 
   const CLIENT_ID = "135ae988dbca4981989bff22410cb627";
   const REDIRECT_URI = "http://localhost:5173/home";
@@ -45,16 +48,7 @@ function App() {
     }
   }, []);
 
-  console.log(token);
-
-  async function fetchProfile(accessToken) {
-    const result = await fetch("https://api.spotify.com/v1/me", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-
-    return await result.json();
-  }
+  // console.log(token);
 
   async function refreshToken(refreshToken) {
     const tokenEndpoint = "https://accounts.spotify.com/api/token";
@@ -80,11 +74,75 @@ function App() {
     }
   }
 
-  const fetchUserProfile = useCallback(
-    async (accessToken) => {
+  async function addRatingToAlbum(albumId, rating) {
+    try {
+      // 1. Query Firestore to retrieve the document containing addedAlbums
+      const userDocRef = doc(db, "users", profile.id);
+      const userDocSnapshot = await getDoc(userDocRef);
+
+      const userData = userDocSnapshot.data().addedAlbums;
+      console.log("userData", userData);
+
+      console.log("added:", added);
+      const updatedAlbums = userData.map((album) => {
+        if (album.id === albumId) {
+          // 3. Update the rating for the matching object
+          album.rating = rating;
+        }
+        return album;
+      });
+
+      // 4. Update the Firestore document with the modified addedAlbums array
+      await updateDoc(userDocRef, {
+        addedAlbums: updatedAlbums,
+      });
+    } catch (error) {
+      console.error("Error adding rating:", error);
+    }
+  }
+
+  useEffect(() => {
+    const updateAddedInFirestore = async () => {
+      if (token && added >= 0) {
+        try {
+          const userDocRef = doc(db, "users", profile.id);
+          console.log("another doc");
+          await updateDoc(userDocRef, {
+            addedAlbums: added,
+          });
+        } catch (error) {
+          console.error("Error updating added albums:", error);
+        }
+      }
+    };
+
+    updateAddedInFirestore();
+  }, [added]);
+
+  useEffect(() => {
+    async function fetchProfile(accessToken) {
+      const result = await fetch("https://api.spotify.com/v1/me", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      return await result.json();
+    }
+
+    async function fetchUserProfile(accessToken) {
       try {
         const profileData = await fetchProfile(accessToken);
+        console.log(profileData);
         setProfile(profileData);
+        console.log(profile);
+
+        // Check if the user document exists in the Firestore database
+        const userDocRef = doc(db, "users", profileData.id);
+        console.log("Doc", userDocRef);
+
+        await setDoc(doc(db, "users", profileData.id), {
+          addedAlbums: added, // if they don't exist
+        });
       } catch (error) {
         if (error.message === "Access token expired") {
           // Handle token refresh and retry the request
@@ -99,15 +157,11 @@ function App() {
           console.error("Error fetching profile:", error);
         }
       }
-    },
-    [token]
-  );
-
-  useEffect(() => {
+    }
     if (token) {
       fetchUserProfile(token);
     }
-  }, [fetchUserProfile, token]);
+  }, [token]);
 
   function handleAdd(selectedAlbum) {
     const newAddedAlbum = {
@@ -119,6 +173,7 @@ function App() {
       total_tracks: selectedAlbum.total_tracks,
       external_urls: selectedAlbum.external_urls.spotify,
       clicked: true,
+      rating: userRating,
     };
 
     // Use the updater function form of setAdded to ensure you're working with the latest state
@@ -128,18 +183,20 @@ function App() {
     localStorage.setItem("addedAlbums", JSON.stringify(updatedAdded));
 
     console.log(updatedAdded);
+    console.log(added);
   }
 
   useEffect(() => {
     localStorage.setItem("lastQuery", query);
   }, [query]);
 
-  useEffect(() => {
-    const savedRating = localStorage.getItem("userRating");
-    if (savedRating) {
-      setUserRating(parseInt(savedRating, 10));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedRating = localStorage.getItem("userRating");
+  //   console.log("savedRating", savedRating);
+  //   if (savedRating) {
+  //     setUserRating(parseInt(savedRating, 10));
+  //   }
+  // }, []);
 
   return (
     <>
@@ -183,6 +240,7 @@ function App() {
                 addedAlbums={added}
                 setUserRating={setUserRating}
                 userRating={userRating}
+                addRatingToAlbum={addRatingToAlbum}
               />
             }
           />

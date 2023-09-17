@@ -1,9 +1,13 @@
 import PropTypes from "prop-types";
 import StarRating from "./StarRating";
 
-function SelectedAlbum({ selectedAlbum, setUserRating, selected }) {
-  console.log(selectedAlbum);
-
+function SelectedAlbum({
+  selectedAlbum,
+  setUserRating,
+  selected,
+  addRatingToAlbum,
+  addedAlbums,
+}) {
   return (
     <>
       {selected ? (
@@ -24,8 +28,11 @@ function SelectedAlbum({ selectedAlbum, setUserRating, selected }) {
               size={38}
               onSetRating={setUserRating}
               id={selectedAlbum.id}
+              addRatingToAlbum={addRatingToAlbum}
+              addedAlbums={addedAlbums}
             />
           )}
+          <h1>Remove this album</h1>
         </div>
       ) : (
         <div className="alternate-text">
@@ -42,4 +49,6 @@ SelectedAlbum.propTypes = {
   selectedAlbum: PropTypes.any,
   setUserRating: PropTypes.func.isRequired,
   selected: PropTypes.bool.isRequired,
+  addRatingToAlbum: PropTypes.func.isRequired,
+  addedAlbums: PropTypes.array.isRequired,
 };
