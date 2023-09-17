@@ -66,7 +66,6 @@ MyAlbums.propTypes = {
   profile: PropTypes.any,
   setUserRating: PropTypes.func.isRequired,
   addRatingToAlbum: PropTypes.func.isRequired,
-  userDocRef: PropTypes.any.isRequired,
   addedAlbums: PropTypes.array.isRequired,
 };
 
