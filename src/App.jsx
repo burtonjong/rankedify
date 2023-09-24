@@ -16,7 +16,7 @@ function App() {
   const [profile, setProfile] = useState(null);
   const [albums, setAlbums] = useState([]);
   const [added, setAdded] = useState([]);
-  const [userRating, setUserRating] = useState(null);
+  const [userRating, setUserRating] = useState(1);
   const [show, setShow] = useState(false);
 
   const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
@@ -90,11 +90,12 @@ function App() {
       const userData = userDocSnapshot.data().addedAlbums;
       console.log("userData", userData);
 
-      console.log("added:", added);
       const updatedAlbums = userData.map((album) => {
         if (album.id === albumId) {
           // 3. Update the rating for the matching object
+
           album.rating = rating;
+          console.log(album.rating);
         }
         return album;
       });
@@ -111,21 +112,23 @@ function App() {
   useEffect(() => {
     const token = Cookies.get("access_token");
     const updateAddedInFirestore = async () => {
-      if (token && added >= 0) {
+      if (added && token) {
         try {
           const userDocRef = doc(db, "users", profile.id);
-          console.log("another doc");
+
           await updateDoc(userDocRef, {
             addedAlbums: added,
           });
+          console.log(profile);
         } catch (error) {
           console.error("Error updating added albums:", error);
         }
+      } else {
+        console.log("It did not work");
       }
     };
-    console.log(profile);
     updateAddedInFirestore();
-  }, [added, profile]);
+  }, [added]);
 
   useEffect(() => {
     const token = Cookies.get("access_token");
@@ -144,15 +147,20 @@ function App() {
         const profileData = await fetchProfile(accessToken);
         console.log(profileData);
         setProfile(profileData);
-        console.log(profile);
 
         // Check if the user document exists in the Firestore database
         const userDocRef = doc(db, "users", profileData.id);
-        console.log("Doc", userDocRef);
+        const docSnap = await getDoc(userDocRef);
 
-        await setDoc(doc(db, "users", profileData.id), {
-          addedAlbums: added, // if they don't exist
-        });
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data());
+        } else {
+          console.log("No such document!");
+          await setDoc(doc(db, "users", profileData.id), {
+            addedAlbums: added, // if they don't exist
+          });
+        }
+        console.log("Doc", userDocRef);
       } catch (error) {
         if (error.message === "Access token expired") {
           // Handle token refresh and retry the request
