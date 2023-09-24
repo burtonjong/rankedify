@@ -41,14 +41,14 @@ export default function StarRating({
   function handleRating(rating) {
     setRating(rating);
     onSetRating(rating);
-    console.log(id);
 
-    const test = addedAlbums.find((album) => album.id === id);
-    test.rating = rating;
+    // const album = addedAlbums.find((album) => album.id === id);
+    // album.rating = rating;
 
     localStorage.setItem(id, rating);
 
     addRatingToAlbum(id, rating);
+    console.log(addedAlbums);
   }
 
   const textStyle = {

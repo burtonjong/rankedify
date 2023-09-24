@@ -18,6 +18,7 @@ function App() {
   const [added, setAdded] = useState([]);
   const [userRating, setUserRating] = useState(1);
   const [show, setShow] = useState(false);
+  const [profileIsFetched, setProfileIsFetched] = useState(false);
 
   const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
   const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
@@ -91,6 +92,8 @@ function App() {
       console.log("userData", userData);
 
       const updatedAlbums = userData.map((album) => {
+        console.log("first", album.id);
+        console.log("second", albumId);
         if (album.id === albumId) {
           // 3. Update the rating for the matching object
 
@@ -110,25 +113,23 @@ function App() {
   }
 
   useEffect(() => {
-    const token = Cookies.get("access_token");
     const updateAddedInFirestore = async () => {
-      if (added && token) {
+      if (profileIsFetched) {
         try {
           const userDocRef = doc(db, "users", profile.id);
-
           await updateDoc(userDocRef, {
             addedAlbums: added,
           });
-          console.log(profile);
+          console.log("Profile has been fetched", profile);
         } catch (error) {
           console.error("Error updating added albums:", error);
         }
       } else {
-        console.log("It did not work");
+        console.log("Profile is still fetching");
       }
     };
     updateAddedInFirestore();
-  }, [added]);
+  }, [profileIsFetched, added]);
 
   useEffect(() => {
     const token = Cookies.get("access_token");
@@ -147,6 +148,7 @@ function App() {
         const profileData = await fetchProfile(accessToken);
         console.log(profileData);
         setProfile(profileData);
+        setProfileIsFetched(true);
 
         // Check if the user document exists in the Firestore database
         const userDocRef = doc(db, "users", profileData.id);
