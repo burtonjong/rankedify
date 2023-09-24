@@ -6,8 +6,7 @@ import SelectedAlbum from "../components/SelectedAlbum";
 import { useState } from "react";
 
 function MyAlbums({
-  token,
-  setToken,
+  show,
   profile,
   setUserRating,
   addRatingToAlbum,
@@ -24,11 +23,11 @@ function MyAlbums({
 
   return (
     <div className="myalbum-container">
-      {!token ? (
-        <Error setToken={setToken} />
+      {!show ? (
+        <Error />
       ) : (
         <>
-          <Navbar setToken={setToken} profile={profile} />
+          <Navbar profile={profile} />
           <main className="box-container">
             <div className="box">
               <ul className="list list-albums">
@@ -61,8 +60,7 @@ function MyAlbums({
 }
 
 MyAlbums.propTypes = {
-  token: PropTypes.string.isRequired,
-  setToken: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired,
   profile: PropTypes.any,
   setUserRating: PropTypes.func.isRequired,
   addRatingToAlbum: PropTypes.func.isRequired,

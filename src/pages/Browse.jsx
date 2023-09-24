@@ -4,10 +4,10 @@ import Search from "../components/Search";
 import Error from "../components/Error";
 import Album from "../components/Album";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 function Browse({
-  token,
-  setToken,
+  show,
   query,
   setQuery,
   profile,
@@ -24,6 +24,7 @@ function Browse({
       const controller = new AbortController();
 
       async function fetchAlbums() {
+        const token = Cookies.get("access_token");
         try {
           setIsLoading(true);
           setError("");
@@ -84,11 +85,11 @@ function Browse({
 
   return (
     <div>
-      {!token ? (
-        <Error setToken={setToken} />
+      {!show ? (
+        <Error />
       ) : (
         <>
-          <Navbar setToken={setToken} profile={profile} />
+          <Navbar profile={profile} />
           <div className="container-search">
             <Search query={query} setQuery={setQuery} />
           </div>
@@ -119,8 +120,7 @@ function Browse({
 }
 
 Browse.propTypes = {
-  token: PropTypes.string.isRequired,
-  setToken: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired,
   query: PropTypes.string.isRequired,
   setQuery: PropTypes.func.isRequired,
   profile: PropTypes.any,

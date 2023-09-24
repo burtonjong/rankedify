@@ -9,17 +9,18 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../src/firebase.js";
+import Cookies from "js-cookie";
 
 function App() {
   const [query, setQuery] = useState("");
-  const [token, setToken] = useState("");
   const [profile, setProfile] = useState(null);
   const [albums, setAlbums] = useState([]);
   const [added, setAdded] = useState([]);
   const [userRating, setUserRating] = useState(null);
+  const [show, setShow] = useState(false);
 
-  const CLIENT_ID = "135ae988dbca4981989bff22410cb627";
-  const REDIRECT_URI = "http://localhost:5173/home";
+  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "token";
   const CLIENT_SECRET = "4195754e67d84c5592aa09d799685dd9";
@@ -27,7 +28,7 @@ function App() {
 
   useEffect(() => {
     const hash = window.location.hash;
-    let token = window.localStorage.getItem("token");
+    let token = "";
 
     // getToken()
 
@@ -39,9 +40,15 @@ function App() {
         .split("=")[1];
 
       window.location.hash = "";
-      window.localStorage.setItem("token", token);
+      // window.localStorage.setItem("token", token);
+      Cookies.set("access_token", token, {
+        secure: true,
+        httpOnly: false,
+      });
     }
-    setToken(token);
+    const one = Cookies.get("access_token");
+    console.log(one);
+    setShow(true);
     const storedAddedAlbums = localStorage.getItem("addedAlbums");
     if (storedAddedAlbums) {
       setAdded(JSON.parse(storedAddedAlbums));
@@ -102,6 +109,7 @@ function App() {
   }
 
   useEffect(() => {
+    const token = Cookies.get("access_token");
     const updateAddedInFirestore = async () => {
       if (token && added >= 0) {
         try {
@@ -115,15 +123,17 @@ function App() {
         }
       }
     };
-
+    console.log(profile);
     updateAddedInFirestore();
-  }, [added]);
+  }, [added, profile]);
 
   useEffect(() => {
-    async function fetchProfile(accessToken) {
+    const token = Cookies.get("access_token");
+
+    async function fetchProfile(token) {
       const result = await fetch("https://api.spotify.com/v1/me", {
         method: "GET",
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       return await result.json();
@@ -158,10 +168,10 @@ function App() {
         }
       }
     }
-    if (token) {
+    if (show) {
       fetchUserProfile(token);
     }
-  }, [token]);
+  }, [show]);
 
   function handleAdd(selectedAlbum) {
     const newAddedAlbum = {
@@ -221,8 +231,7 @@ function App() {
               <Home
                 CLIENT_ID={CLIENT_ID}
                 CLIENT_SECRET={CLIENT_SECRET}
-                token={token}
-                setToken={setToken}
+                show={show}
                 profile={profile}
                 addedAlbums={added}
                 userRating={Number(userRating)}
@@ -234,8 +243,7 @@ function App() {
             path="/myalbums"
             element={
               <MyAlbums
-                token={token}
-                setToken={setToken}
+                show={show}
                 profile={profile}
                 addedAlbums={added}
                 setUserRating={setUserRating}
@@ -248,8 +256,7 @@ function App() {
             path="/browse"
             element={
               <Browse
-                token={token}
-                setToken={setToken}
+                show={show}
                 query={query}
                 setQuery={setQuery}
                 profile={profile}

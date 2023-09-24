@@ -5,7 +5,7 @@ import Error from "../components/Error";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-function Home({ token, setToken, profile, addedAlbums, userRating }) {
+function Home({ show, profile, addedAlbums, userRating }) {
   const track = document.getElementById("image-track");
 
   const handleOnDown = (e) => (track.dataset.mouseDownAt = e.clientY);
@@ -98,8 +98,8 @@ function Home({ token, setToken, profile, addedAlbums, userRating }) {
 
   return (
     <>
-      {!token ? (
-        <Error setToken={setToken} />
+      {!show ? (
+        <Error />
       ) : (
         <>
           <div className="bg flex ai-center">
@@ -113,7 +113,7 @@ function Home({ token, setToken, profile, addedAlbums, userRating }) {
             )}
           </div>
 
-          <Navbar setToken={setToken} profile={profile} />
+          <Navbar profile={profile} />
           <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
             {addedAlbums.length > 0 ? (
               <>
@@ -165,8 +165,7 @@ function Home({ token, setToken, profile, addedAlbums, userRating }) {
 }
 
 Home.propTypes = {
-  token: PropTypes.string.isRequired,
-  setToken: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired,
   profile: PropTypes.any,
   addedAlbums: PropTypes.array.isRequired,
   userRating: PropTypes.number.isRequired,

@@ -1,13 +1,10 @@
 import PropTypes from "prop-types";
 import { useNavigate, Link } from "react-router-dom";
 
-function Navbar({ setToken, profile }) {
+function Navbar({ profile }) {
   const navigate = useNavigate();
 
   const logout = () => {
-    setToken("");
-    window.localStorage.removeItem("token");
-
     navigate("/");
   };
 
@@ -87,7 +84,6 @@ function Navbar({ setToken, profile }) {
 }
 
 Navbar.propTypes = {
-  setToken: PropTypes.func.isRequired,
   profile: PropTypes.any,
 };
 
