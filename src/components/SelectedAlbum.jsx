@@ -8,6 +8,11 @@ function SelectedAlbum({
   addRatingToAlbum,
   addedAlbums,
 }) {
+  // Find the album in addedAlbums by its id
+  const albumInAddedAlbums = addedAlbums.find(
+    (album) => album.id === selectedAlbum.id
+  );
+
   return (
     <>
       {selected ? (
@@ -18,10 +23,8 @@ function SelectedAlbum({
             alt={`${selectedAlbum.name}'s album cover`}
           />
           <h1>{selectedAlbum.name}</h1>
-          {localStorage.getItem(selectedAlbum.id) ? (
-            <h1>
-              You rated this album a {localStorage.getItem(selectedAlbum.id)}
-            </h1>
+          {albumInAddedAlbums && albumInAddedAlbums.rating ? (
+            <h1>You rated this album a {albumInAddedAlbums.rating}</h1>
           ) : (
             <StarRating
               maxRating={10}

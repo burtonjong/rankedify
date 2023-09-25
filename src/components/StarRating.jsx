@@ -45,7 +45,20 @@ export default function StarRating({
     // const album = addedAlbums.find((album) => album.id === id);
     // album.rating = rating;
 
-    localStorage.setItem(id, rating);
+    const storedAlbums = JSON.parse(localStorage.getItem("addedAlbums")) || {};
+    const targetAlbum = storedAlbums.find((album) => album.id === id);
+    targetAlbum.rating = rating; // Replace newRating with the new rating value
+
+    // Update the storedAlbums array in local storage
+    const updatedStoredAlbums = storedAlbums.map((album) =>
+      album.id === targetAlbum.id ? targetAlbum : album
+    );
+
+    // Save the updated storedAlbums array back to local storage
+    localStorage.setItem("addedAlbums", JSON.stringify(updatedStoredAlbums));
+
+    // Log the updated object
+    console.log(updatedStoredAlbums);
 
     addRatingToAlbum(id, rating);
     console.log(addedAlbums);

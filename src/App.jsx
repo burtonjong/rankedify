@@ -3,7 +3,7 @@ import Browse from "./pages/Browse";
 import MyAlbums from "./pages/MyAlbums";
 import Login from "./pages/Login";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -50,10 +50,11 @@ function App() {
     const one = Cookies.get("access_token");
     console.log(one);
     setShow(true);
-    const storedAddedAlbums = localStorage.getItem("addedAlbums");
-    if (storedAddedAlbums) {
-      setAdded(JSON.parse(storedAddedAlbums));
-    }
+
+    // const storedAddedAlbums = localStorage.getItem("addedAlbums");
+    // if (storedAddedAlbums) {
+    //   setAdded(JSON.parse(storedAddedAlbums));
+    // }
   }, []);
 
   // console.log(token);
@@ -91,8 +92,6 @@ function App() {
       console.log("userData", userData);
 
       const updatedAlbums = userData.map((album) => {
-        console.log("first", album.id);
-        console.log("second", albumId);
         if (album.id === albumId) {
           // 3. Update the rating for the matching object
 
@@ -116,9 +115,12 @@ function App() {
       if (profileIsFetched) {
         try {
           const userDocRef = doc(db, "users", profile.id);
-          await updateDoc(userDocRef, {
-            addedAlbums: added,
-          });
+          if (added.length > 0) {
+            await updateDoc(userDocRef, {
+              addedAlbums: added,
+            });
+          }
+
           console.log("Profile has been fetched", profile);
         } catch (error) {
           console.error("Error updating added albums:", error);
@@ -155,6 +157,11 @@ function App() {
 
         if (docSnap.exists()) {
           console.log("Document data, user exsists:", docSnap.data());
+          setAdded(docSnap.data().addedAlbums);
+          localStorage.setItem(
+            "addedAlbums",
+            JSON.stringify(docSnap.data().addedAlbums)
+          );
         } else {
           console.log("No such document!");
           await setDoc(doc(db, "users", profileData.id), {
@@ -208,14 +215,6 @@ function App() {
   useEffect(() => {
     localStorage.setItem("lastQuery", query);
   }, [query]);
-
-  // useEffect(() => {
-  //   const savedRating = localStorage.getItem("userRating");
-  //   console.log("savedRating", savedRating);
-  //   if (savedRating) {
-  //     setUserRating(parseInt(savedRating, 10));
-  //   }
-  // }, []);
 
   return (
     <>

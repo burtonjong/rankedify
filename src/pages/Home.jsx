@@ -137,10 +137,7 @@ function Home({ show, profile, addedAlbums, userRating }) {
                     />
                     {clickedIndex === index && (
                       <div className="flex column">
-                        <h1>
-                          You rated this album a{" "}
-                          {localStorage.getItem(album.id)}
-                        </h1>
+                        <h1>You rated this album a {album.rating}</h1>
                         <h2>Your top 3 songs:</h2>
                         <ul>
                           <li>1. Meow</li>
