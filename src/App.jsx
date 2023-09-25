@@ -87,7 +87,6 @@ function App() {
       // 1. Query Firestore to retrieve the document containing addedAlbums
       const userDocRef = doc(db, "users", profile.id);
       const userDocSnapshot = await getDoc(userDocRef);
-
       const userData = userDocSnapshot.data().addedAlbums;
       console.log("userData", userData);
 
@@ -155,7 +154,7 @@ function App() {
         const docSnap = await getDoc(userDocRef);
 
         if (docSnap.exists()) {
-          console.log("Document data:", docSnap.data());
+          console.log("Document data, user exsists:", docSnap.data());
         } else {
           console.log("No such document!");
           await setDoc(doc(db, "users", profileData.id), {
