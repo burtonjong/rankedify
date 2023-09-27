@@ -11,6 +11,7 @@ function MyAlbums({
   setUserRating,
   addRatingToAlbum,
   addedAlbums,
+  setAdded,
 }) {
   const [selectedAlbum, setSelectedAlbum] = useState([]);
   const [selected, setSelected] = useState(false);
@@ -18,7 +19,7 @@ function MyAlbums({
   const handleClick = (album) => {
     setSelectedAlbum(album);
     setSelected(true);
-    console.log(addedAlbums);
+    console.log(album);
   };
 
   return (
@@ -35,8 +36,6 @@ function MyAlbums({
                   <StoredAlbum
                     key={index}
                     album={album}
-                    setUserRating={setUserRating}
-                    addedAlbums={addedAlbums}
                     onSelectAlbum={() => handleClick(album)}
                   />
                 ))}
@@ -50,6 +49,8 @@ function MyAlbums({
                 selected={selected}
                 addRatingToAlbum={addRatingToAlbum}
                 addedAlbums={addedAlbums}
+                setSelected={setSelected}
+                setAdded={setAdded}
               />
             </div>
           </main>
@@ -65,6 +66,7 @@ MyAlbums.propTypes = {
   setUserRating: PropTypes.func.isRequired,
   addRatingToAlbum: PropTypes.func.isRequired,
   addedAlbums: PropTypes.array.isRequired,
+  setAdded: PropTypes.func.isRequired,
 };
 
 export default MyAlbums;

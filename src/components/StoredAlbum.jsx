@@ -18,7 +18,5 @@ export default StoredAlbum;
 
 StoredAlbum.propTypes = {
   album: PropTypes.object.isRequired,
-  setUserRating: PropTypes.func.isRequired,
-  addedAlbums: PropTypes.array.isRequired,
   onSelectAlbum: PropTypes.func.isRequired,
 };

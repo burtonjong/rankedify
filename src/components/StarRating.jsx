@@ -45,6 +45,9 @@ export default function StarRating({
     // const album = addedAlbums.find((album) => album.id === id);
     // album.rating = rating;
 
+    const stateAlbum = addedAlbums.find((album) => album.id === id);
+    stateAlbum.rating = rating;
+
     const storedAlbums = JSON.parse(localStorage.getItem("addedAlbums")) || {};
     const targetAlbum = storedAlbums.find((album) => album.id === id);
     targetAlbum.rating = rating; // Replace newRating with the new rating value

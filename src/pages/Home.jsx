@@ -5,7 +5,7 @@ import Error from "../components/Error";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-function Home({ show, profile, addedAlbums, userRating }) {
+function Home({ show, profile, addedAlbums, userRating, loading }) {
   const track = document.getElementById("image-track");
 
   const handleOnDown = (e) => (track.dataset.mouseDownAt = e.clientY);
@@ -96,6 +96,8 @@ function Home({ show, profile, addedAlbums, userRating }) {
     console.log(userRating);
   }, [userRating]);
 
+  const sortedAlbums = addedAlbums.sort((a, b) => b.rating - a.rating);
+
   return (
     <>
       {!show ? (
@@ -118,10 +120,13 @@ function Home({ show, profile, addedAlbums, userRating }) {
             {addedAlbums.length > 0 ? (
               <>
                 <h1 className="image-title" ref={ref}>
-                  Check out your top 10.
+                  {loading ? "Check out your top 10." : "Loading..."}
                 </h1>
-                <h2 className="image-title-small">Scroll down.</h2>
-                {addedAlbums.slice(0, 10).map((album, index) => (
+                <h2 className="image-title-small">
+                  {" "}
+                  {loading ? "Scroll down." : ""}
+                </h2>
+                {sortedAlbums.slice(0, 10).map((album, index) => (
                   <div key={album.id} className="image-info">
                     <img
                       className={`image user-select ${
@@ -151,7 +156,7 @@ function Home({ show, profile, addedAlbums, userRating }) {
               </>
             ) : (
               <h1 className="ta-center image-title moved">
-                You dont have any albums yet.
+                {loading ? "You dont have any albums yet." : "Loading..."}
               </h1>
             )}
           </div>
@@ -166,6 +171,7 @@ Home.propTypes = {
   profile: PropTypes.any,
   addedAlbums: PropTypes.array.isRequired,
   userRating: PropTypes.number.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default Home;

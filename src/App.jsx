@@ -16,9 +16,10 @@ function App() {
   const [profile, setProfile] = useState(null);
   const [albums, setAlbums] = useState([]);
   const [added, setAdded] = useState([]);
-  const [userRating, setUserRating] = useState(1);
+  const [userRating, setUserRating] = useState(null);
   const [show, setShow] = useState(false);
   const [profileIsFetched, setProfileIsFetched] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
   const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
@@ -169,6 +170,7 @@ function App() {
           });
         }
         console.log("Doc", userDocRef);
+        setLoading(true);
       } catch (error) {
         if (error.message === "Access token expired") {
           // Handle token refresh and retry the request
@@ -243,7 +245,7 @@ function App() {
                 profile={profile}
                 addedAlbums={added}
                 userRating={Number(userRating)}
-                setUserRating={setUserRating}
+                loading={loading}
               />
             }
           />
@@ -257,6 +259,7 @@ function App() {
                 setUserRating={setUserRating}
                 userRating={userRating}
                 addRatingToAlbum={addRatingToAlbum}
+                setAdded={setAdded}
               />
             }
           />
