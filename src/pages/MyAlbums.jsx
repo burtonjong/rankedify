@@ -3,7 +3,8 @@ import Navbar from "../components/Navbar";
 import Error from "../components/Error";
 import StoredAlbum from "../components/StoredAlbum";
 import SelectedAlbum from "../components/SelectedAlbum";
-import { useState } from "react";
+import AlbumSearch from "../components/AlbumSearch";
+import { useEffect, useState } from "react";
 
 function MyAlbums({
   show,
@@ -15,12 +16,31 @@ function MyAlbums({
 }) {
   const [selectedAlbum, setSelectedAlbum] = useState([]);
   const [selected, setSelected] = useState(false);
+  const [query1, setQuery1] = useState("");
 
   const handleClick = (album) => {
     setSelectedAlbum(album);
     setSelected(true);
     console.log(album);
   };
+
+  const [filteredAlbums, setFilteredAlbums] = useState(addedAlbums);
+
+  // Use useEffect to filter the albumNames array based on the query
+  useEffect(() => {
+    if (query1.length > 3) {
+      const filtered = addedAlbums.filter(
+        (album) =>
+          album.name.toLowerCase().includes(query1.toLowerCase()) ||
+          album.artist.toLowerCase().includes(query1.toLowerCase())
+      );
+      console.log(filtered);
+      setFilteredAlbums(filtered);
+    }
+    if (query1.length < 3) {
+      setFilteredAlbums(addedAlbums);
+    }
+  }, [query1]);
 
   return (
     <div className="myalbum-container">
@@ -31,8 +51,9 @@ function MyAlbums({
           <Navbar profile={profile} />
           <main className="box-container">
             <div className="box">
+              <AlbumSearch query1={query1} setQuery1={setQuery1} />
               <ul className="list list-albums">
-                {addedAlbums.map((album, index) => (
+                {filteredAlbums.map((album, index) => (
                   <StoredAlbum
                     key={index}
                     album={album}
