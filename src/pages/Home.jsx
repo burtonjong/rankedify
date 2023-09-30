@@ -96,7 +96,11 @@ function Home({ show, profile, addedAlbums, userRating, loading }) {
     console.log(userRating);
   }, [userRating]);
 
-  const sortedAlbums = addedAlbums.sort((a, b) => b.rating - a.rating);
+  const sortedAlbums = addedAlbums
+    .filter((album) => typeof album.rating === "number") // Filter out albums without a rating
+    .sort((a, b) => b.rating - a.rating);
+
+  console.log(addedAlbums);
 
   return (
     <>

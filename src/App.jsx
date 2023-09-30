@@ -106,6 +106,7 @@ function App() {
       await updateDoc(userDocRef, {
         addedAlbums: updatedAlbums,
       });
+      console.log("mewow");
     } catch (error) {
       console.error("Error adding rating:", error);
     }
@@ -192,6 +193,7 @@ function App() {
   }, [show]);
 
   function handleAdd(selectedAlbum) {
+    // Create a newAddedAlbum object with basic album information and a null rating
     const newAddedAlbum = {
       name: selectedAlbum.name,
       image: selectedAlbum.images[0].url,
@@ -204,14 +206,42 @@ function App() {
       rating: userRating,
     };
 
-    // Use the updater function form of setAdded to ensure you're working with the latest state
-    const updatedAdded = [...added, newAddedAlbum];
-    setAdded(updatedAdded);
+    // Fetch songs for the selected album
+    async function fetchAlbumSongs() {
+      const token = Cookies.get("access_token");
+      const response = await fetch(
+        `https://api.spotify.com/v1/albums/${selectedAlbum.id}/tracks?market=US`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
 
-    localStorage.setItem("addedAlbums", JSON.stringify(updatedAdded));
+      // Create an array of songs with null ratings
+      const songsWithRatings = data.items.map((song) => ({
+        name: song.name,
+        rating: null, // Set a null rating for each song
+      }));
 
-    console.log(updatedAdded);
-    console.log(added);
+      // Add the songs array to the newAddedAlbum object
+      newAddedAlbum.songs = songsWithRatings;
+
+      // Use the updater function form of setAdded to ensure you're working with the latest state
+      const updatedAdded = [...added, newAddedAlbum];
+      setAdded(updatedAdded);
+
+      // Store the updatedAdded in local storage
+      localStorage.setItem("addedAlbums", JSON.stringify(updatedAdded));
+
+      console.log(updatedAdded);
+      console.log(added);
+    }
+
+    // Call the fetchAlbumSongs function to fetch songs and add them to the newAddedAlbum
+    fetchAlbumSongs();
   }
 
   useEffect(() => {
@@ -260,6 +290,7 @@ function App() {
                 userRating={userRating}
                 addRatingToAlbum={addRatingToAlbum}
                 setAdded={setAdded}
+                loading={loading}
               />
             }
           />

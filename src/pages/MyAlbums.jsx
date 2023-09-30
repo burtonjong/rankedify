@@ -13,6 +13,7 @@ function MyAlbums({
   addRatingToAlbum,
   addedAlbums,
   setAdded,
+  loading,
 }) {
   const [selectedAlbum, setSelectedAlbum] = useState([]);
   const [selected, setSelected] = useState(false);
@@ -39,12 +40,15 @@ function MyAlbums({
     }
     if (query1.length < 3) {
       setFilteredAlbums(addedAlbums);
+      console.log(filteredAlbums);
     }
-  }, [query1]);
+  }, [query1, addedAlbums]);
+  console.log();
+  console.log(loading);
 
   return (
     <div className="myalbum-container">
-      {!show ? (
+      {!show && loading ? (
         <Error />
       ) : (
         <>
@@ -52,15 +56,19 @@ function MyAlbums({
           <main className="box-container">
             <div className="box">
               <AlbumSearch query1={query1} setQuery1={setQuery1} />
-              <ul className="list list-albums">
-                {filteredAlbums.map((album, index) => (
-                  <StoredAlbum
-                    key={index}
-                    album={album}
-                    onSelectAlbum={() => handleClick(album)}
-                  />
-                ))}
-              </ul>
+              {loading ? (
+                <ul className="list list-albums">
+                  {filteredAlbums.map((album, index) => (
+                    <StoredAlbum
+                      key={index}
+                      album={album}
+                      onSelectAlbum={() => handleClick(album)}
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <h1>Loading...</h1>
+              )}
             </div>
 
             <div className="box-selected">
@@ -88,6 +96,7 @@ MyAlbums.propTypes = {
   addRatingToAlbum: PropTypes.func.isRequired,
   addedAlbums: PropTypes.array.isRequired,
   setAdded: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default MyAlbums;

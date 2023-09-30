@@ -29,10 +29,7 @@ function SelectedAlbum({
     setSelected(false);
   }
 
-  useEffect(() => {
-    console.log(selectedAlbum);
-    console.log(addedAlbums);
-  }, [selectedAlbum, addedAlbums]);
+  console.log(selectedAlbum);
 
   return (
     <>
