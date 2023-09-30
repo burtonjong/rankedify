@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import StarRating from "./StarRating";
-import { useEffect } from "react";
+import SongStarRating from "./SongStarRating";
+import { useState } from "react";
 
 function SelectedAlbum({
   selectedAlbum,
@@ -29,7 +30,7 @@ function SelectedAlbum({
     setSelected(false);
   }
 
-  console.log(selectedAlbum);
+  console.log(selectedAlbum.songs);
 
   return (
     <>
@@ -54,6 +55,11 @@ function SelectedAlbum({
             />
           )}
           <h1 onClick={onDelete}>Remove this album</h1>
+          <div>
+            {selectedAlbum.songs.map((song) => (
+              <SongRating song={song} key={song.id} />
+            ))}
+          </div>
         </div>
       ) : (
         <div className="alternate-text">
@@ -65,6 +71,22 @@ function SelectedAlbum({
 }
 
 export default SelectedAlbum;
+
+function SongRating(song, key) {
+  const [songRating, setSongRating] = useState(null);
+
+  const item = song.song;
+  console.log(item);
+
+  return (
+    <>
+      <h1>{item.name}</h1>
+      <span>
+        <SongStarRating maxRating={10} id={key} setSongRating={setSongRating} />
+      </span>
+    </>
+  );
+}
 
 SelectedAlbum.propTypes = {
   selectedAlbum: PropTypes.any,

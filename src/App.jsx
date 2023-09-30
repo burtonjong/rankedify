@@ -224,6 +224,7 @@ function App() {
       const songsWithRatings = data.items.map((song) => ({
         name: song.name,
         rating: null, // Set a null rating for each song
+        songid: song.id,
       }));
 
       // Add the songs array to the newAddedAlbum object
