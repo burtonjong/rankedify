@@ -30,7 +30,7 @@ function SelectedAlbum({
     setSelected(false);
   }
 
-  console.log(selectedAlbum.songs);
+  console.log(addedAlbums);
 
   return (
     <>
@@ -57,7 +57,12 @@ function SelectedAlbum({
           <h1 onClick={onDelete}>Remove this album</h1>
           <div>
             {selectedAlbum.songs.map((song) => (
-              <SongRating song={song} key={song.id} />
+              <SongRating
+                song={song}
+                addedAlbums={addedAlbums}
+                selectedAlbum={selectedAlbum}
+                key={song.id}
+              />
             ))}
           </div>
         </div>
@@ -72,21 +77,31 @@ function SelectedAlbum({
 
 export default SelectedAlbum;
 
-function SongRating(song, key) {
+function SongRating({ song, addedAlbums, selectedAlbum }) {
   const [songRating, setSongRating] = useState(null);
-
-  const item = song.song;
-  console.log(item);
 
   return (
     <>
-      <h1>{item.name}</h1>
+      <h1>{song.name}</h1>
       <span>
-        <SongStarRating maxRating={10} id={key} setSongRating={setSongRating} />
+        <SongStarRating
+          maxRating={10}
+          songid={song.songid}
+          setSongRating={setSongRating}
+          addedAlbums={addedAlbums}
+          selectedAlbum={selectedAlbum}
+        />
       </span>
     </>
   );
 }
+
+SongRating.propTypes = {
+  song: PropTypes.any,
+  key: PropTypes.any,
+  addedAlbums: PropTypes.any,
+  selectedAlbum: PropTypes.any,
+};
 
 SelectedAlbum.propTypes = {
   selectedAlbum: PropTypes.any,

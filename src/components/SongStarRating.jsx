@@ -30,8 +30,10 @@ export default function SongStarRating({
   className = "",
   messages = [],
   defaultRating = 0,
-  id,
+  songid,
   setSongRating,
+  addedAlbums,
+  selectedAlbum,
 }) {
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
@@ -39,7 +41,46 @@ export default function SongStarRating({
   function handleRating(rating) {
     setRating(rating);
     setSongRating(rating);
-    console.log(id);
+
+    console.log(selectedAlbum);
+    console.log(addedAlbums);
+
+    const targetSong = addedAlbums
+      .find((album) => album.id === selectedAlbum.id)
+      ?.songs.find((song) => song.songid === songid);
+    targetSong.rating = rating;
+
+    const storedAlbums = JSON.parse(localStorage.getItem("addedAlbums")) || {};
+    const localStorageTarget = storedAlbums
+      .find((album) => album.id === selectedAlbum.id)
+      ?.songs.find((song) => song.songid === songid);
+
+    localStorageTarget.rating = rating;
+    console.log(localStorageTarget);
+
+    // Update the storedAlbums array in local storage
+    const updatedStoredAlbums = storedAlbums.map((album) => {
+      if (album.id === selectedAlbum.id) {
+        const updatedSongs = album.songs.map((song) => {
+          if (song.songid === songid) {
+            return {
+              ...song,
+              rating: rating,
+            };
+          }
+          return song;
+        });
+
+        return {
+          ...album,
+          songs: updatedSongs,
+        };
+      }
+      return album;
+    });
+
+    // Save the updated storedAlbums array back to local storage
+    localStorage.setItem("addedAlbums", JSON.stringify(updatedStoredAlbums));
   }
 
   const textStyle = {
