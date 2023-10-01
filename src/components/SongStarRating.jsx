@@ -20,7 +20,6 @@ SongStarRating.propTypes = {
   size: PropTypes.number,
   messages: PropTypes.array,
   className: PropTypes.string,
-  onSetRating: PropTypes.func,
 };
 
 export default function SongStarRating({
@@ -34,6 +33,7 @@ export default function SongStarRating({
   setSongRating,
   addedAlbums,
   selectedAlbum,
+  addRatingToSong,
 }) {
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
@@ -81,6 +81,8 @@ export default function SongStarRating({
 
     // Save the updated storedAlbums array back to local storage
     localStorage.setItem("addedAlbums", JSON.stringify(updatedStoredAlbums));
+    // READ PLEASE NEED TO NOW CONNECT TO FIRESTORE>>>> YAY!!!!
+    addRatingToSong(songid, rating, selectedAlbum);
   }
 
   const textStyle = {

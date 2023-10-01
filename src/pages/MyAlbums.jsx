@@ -14,6 +14,7 @@ function MyAlbums({
   addedAlbums,
   setAdded,
   loading,
+  addRatingToSong,
 }) {
   const [selectedAlbum, setSelectedAlbum] = useState([]);
   const [selected, setSelected] = useState(false);
@@ -22,7 +23,6 @@ function MyAlbums({
   const handleClick = (album) => {
     setSelectedAlbum(album);
     setSelected(true);
-    console.log(album);
   };
 
   const [filteredAlbums, setFilteredAlbums] = useState(addedAlbums);
@@ -40,11 +40,8 @@ function MyAlbums({
     }
     if (query1.length < 3) {
       setFilteredAlbums(addedAlbums);
-      console.log(filteredAlbums);
     }
   }, [query1, addedAlbums]);
-  console.log();
-  console.log(loading);
 
   return (
     <div className="myalbum-container">
@@ -80,6 +77,7 @@ function MyAlbums({
                 addedAlbums={addedAlbums}
                 setSelected={setSelected}
                 setAdded={setAdded}
+                addRatingToSong={addRatingToSong}
               />
             </div>
           </main>
@@ -97,6 +95,7 @@ MyAlbums.propTypes = {
   addedAlbums: PropTypes.array.isRequired,
   setAdded: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  addRatingToSong: PropTypes.func.isRequired,
 };
 
 export default MyAlbums;

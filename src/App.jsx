@@ -84,6 +84,41 @@ function App() {
     }
   }
 
+  async function addRatingToSong(songid, rating, selectedAlbum) {
+    try {
+      // 1. Query Firestore to retrieve the document containing addedAlbums
+      const userDocRef = doc(db, "users", profile.id);
+      const userDocSnapshot = await getDoc(userDocRef);
+      const userData = userDocSnapshot.data().addedAlbums;
+      console.log("userData", userData);
+
+      const updatedAlbums = userData.map((album) => {
+        if (album.id === selectedAlbum.id) {
+          // 3. Update the rating for the matching object
+          const updatedSongs = album.songs.map((song) => {
+            if (song.songid === songid) {
+              return {
+                ...song,
+                rating: rating,
+              };
+            }
+            return song;
+          });
+          album.songs = updatedSongs;
+        }
+        return album;
+      });
+
+      // 4. Update the Firestore document with the modified addedAlbums array
+      await updateDoc(userDocRef, {
+        addedAlbums: updatedAlbums,
+      });
+      console.log("mewow");
+    } catch (error) {
+      console.error("Error adding rating:", error);
+    }
+  }
+
   async function addRatingToAlbum(albumId, rating) {
     try {
       // 1. Query Firestore to retrieve the document containing addedAlbums
@@ -292,6 +327,7 @@ function App() {
                 addRatingToAlbum={addRatingToAlbum}
                 setAdded={setAdded}
                 loading={loading}
+                addRatingToSong={addRatingToSong}
               />
             }
           />

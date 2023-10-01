@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import StarRating from "./StarRating";
 import SongStarRating from "./SongStarRating";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function SelectedAlbum({
   selectedAlbum,
@@ -11,7 +11,25 @@ function SelectedAlbum({
   addedAlbums,
   setAdded,
   setSelected,
+  addRatingToSong,
 }) {
+  const [songRating, setSongRating] = useState(null);
+  const [finalRating, setFinalRating] = useState(null);
+
+  useEffect(() => {
+    const songs = selectedAlbum.songs;
+    const nullCheck = songs.every((song) => song.rating !== null);
+    if (nullCheck) {
+      const totalRating = songs.reduce((acc, song) => {
+        return acc + song.rating;
+      }, 0);
+      const finalRate = (totalRating / songs.length).toFixed(1);
+      setFinalRating(finalRate);
+    } else {
+      return;
+    }
+  }, [songRating]);
+
   // Find the album in addedAlbums by its id
   const albumInAddedAlbums = addedAlbums.find(
     (album) => album.id === selectedAlbum.id
@@ -30,8 +48,6 @@ function SelectedAlbum({
     setSelected(false);
   }
 
-  console.log(addedAlbums);
-
   return (
     <>
       {selected ? (
@@ -43,7 +59,7 @@ function SelectedAlbum({
           />
           <h1>{selectedAlbum.name}</h1>
           {albumInAddedAlbums && albumInAddedAlbums.rating ? (
-            <h1>You rated this album a {selectedAlbum.rating}</h1>
+            <h1>You rated this album a {finalRating}</h1>
           ) : (
             <StarRating
               maxRating={10}
@@ -61,7 +77,9 @@ function SelectedAlbum({
                 song={song}
                 addedAlbums={addedAlbums}
                 selectedAlbum={selectedAlbum}
+                addRatingToSong={addRatingToSong}
                 key={song.id}
+                setSongRating={setSongRating}
               />
             ))}
           </div>
@@ -77,21 +95,30 @@ function SelectedAlbum({
 
 export default SelectedAlbum;
 
-function SongRating({ song, addedAlbums, selectedAlbum }) {
-  const [songRating, setSongRating] = useState(null);
-
+function SongRating({
+  song,
+  addedAlbums,
+  selectedAlbum,
+  addRatingToSong,
+  setSongRating,
+}) {
   return (
     <>
       <h1>{song.name}</h1>
-      <span>
-        <SongStarRating
-          maxRating={10}
-          songid={song.songid}
-          setSongRating={setSongRating}
-          addedAlbums={addedAlbums}
-          selectedAlbum={selectedAlbum}
-        />
-      </span>
+      {song.rating ? (
+        <span>You rated this song a {song.rating}</span>
+      ) : (
+        <span>
+          <SongStarRating
+            maxRating={10}
+            songid={song.songid}
+            setSongRating={setSongRating}
+            addedAlbums={addedAlbums}
+            selectedAlbum={selectedAlbum}
+            addRatingToSong={addRatingToSong}
+          />
+        </span>
+      )}
     </>
   );
 }
@@ -101,6 +128,8 @@ SongRating.propTypes = {
   key: PropTypes.any,
   addedAlbums: PropTypes.any,
   selectedAlbum: PropTypes.any,
+  addRatingToSong: PropTypes.func.isRequired,
+  setSongRating: PropTypes.func.isRequired,
 };
 
 SelectedAlbum.propTypes = {
@@ -111,4 +140,5 @@ SelectedAlbum.propTypes = {
   addedAlbums: PropTypes.array.isRequired,
   setAdded: PropTypes.func.isRequired,
   setSelected: PropTypes.func.isRequired,
+  addRatingToSong: PropTypes.func.isRequired,
 };
