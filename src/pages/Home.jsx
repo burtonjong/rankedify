@@ -100,6 +100,10 @@ function Home({ show, profile, addedAlbums, userRating, loading }) {
     .filter((album) => typeof album.rating === "number") // Filter out albums without a rating
     .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
 
+  const songs = addedAlbums.map((album) => album.songs)[0];
+  const sortedSongs = songs.sort((a, b) => b.rating - a.rating);
+  const topThreeSongs = sortedSongs.slice(0, 3);
+
   return (
     <>
       {!show ? (
@@ -146,10 +150,14 @@ function Home({ show, profile, addedAlbums, userRating, loading }) {
                       <div className="flex column">
                         <h1>You rated this album a {album.rating}</h1>
                         <h2>Your top 3 songs:</h2>
+
                         <ul>
-                          <li>1. Meow</li>
-                          <li>2. Woof</li>
-                          <li>3. Bark</li>
+                          {topThreeSongs.map((song) => (
+                            <>
+                              <li>{song.name}</li>
+                              <span>You rated this song a {song.rating}</span>
+                            </>
+                          ))}
                         </ul>
                       </div>
                     )}
