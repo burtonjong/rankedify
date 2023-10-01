@@ -15,6 +15,7 @@ function MyAlbums({
   setAdded,
   loading,
   addRatingToSong,
+  deleteAlbumFromDatabase,
 }) {
   const [selectedAlbum, setSelectedAlbum] = useState([]);
   const [selected, setSelected] = useState(false);
@@ -78,6 +79,7 @@ function MyAlbums({
                 setSelected={setSelected}
                 setAdded={setAdded}
                 addRatingToSong={addRatingToSong}
+                deleteAlbumFromDatabase={deleteAlbumFromDatabase}
               />
             </div>
           </main>
@@ -96,6 +98,7 @@ MyAlbums.propTypes = {
   setAdded: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   addRatingToSong: PropTypes.func.isRequired,
+  deleteAlbumFromDatabase: PropTypes.func.isRequired,
 };
 
 export default MyAlbums;

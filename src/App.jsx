@@ -84,6 +84,27 @@ function App() {
     }
   }
 
+  async function deleteAlbumFromDatabase(albumId) {
+    try {
+      // 1. Retrieve the current user's data
+      const userDocRef = doc(db, "users", profile.id);
+      const userDocSnapshot = await getDoc(userDocRef);
+      const userData = userDocSnapshot.data();
+
+      // 2. Modify the addedAlbums array to remove the selected album
+      const updatedAlbums = userData.addedAlbums.filter(
+        (album) => album.id !== albumId
+      );
+
+      // 3. Update the user's document in Firestore with the modified addedAlbums array
+      await updateDoc(userDocRef, { addedAlbums: updatedAlbums });
+
+      console.log("Album deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting album from the database:", error);
+    }
+  }
+
   async function addRatingToSong(songid, rating, selectedAlbum) {
     try {
       // 1. Query Firestore to retrieve the document containing addedAlbums
@@ -328,6 +349,7 @@ function App() {
                 setAdded={setAdded}
                 loading={loading}
                 addRatingToSong={addRatingToSong}
+                deleteAlbumFromDatabase={deleteAlbumFromDatabase}
               />
             }
           />

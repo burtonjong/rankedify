@@ -11,6 +11,7 @@ function SelectedAlbum({
   setSelected,
   addRatingToSong,
   addRatingToAlbum,
+  deleteAlbumFromDatabase,
 }) {
   const [songRating, setSongRating] = useState(null);
   const [ratingKey, setRatingKey] = useState(0);
@@ -67,17 +68,26 @@ function SelectedAlbum({
     (album) => album.id === selectedAlbum.id
   );
 
-  function onDelete() {
-    const storedAlbums = JSON.parse(localStorage.getItem("addedAlbums")) || {};
+  async function onDelete() {
+    try {
+      // Your code to delete the album from the database (replace with your actual database operation)
+      await deleteAlbumFromDatabase(selectedAlbum.id);
 
-    // Remove the album from the storedAlbums array
-    const updatedStoredAlbums = storedAlbums.filter(
-      (album) => album.id !== selectedAlbum.id
-    );
-    console.log(updatedStoredAlbums);
-    localStorage.setItem("addedAlbums", JSON.stringify(updatedStoredAlbums));
-    setAdded(updatedStoredAlbums);
-    setSelected(false);
+      // If the database operation succeeds, update local storage and state
+      const storedAlbums =
+        JSON.parse(localStorage.getItem("addedAlbums")) || {};
+      const updatedStoredAlbums = storedAlbums.filter(
+        (album) => album.id !== selectedAlbum.id
+      );
+
+      localStorage.setItem("addedAlbums", JSON.stringify(updatedStoredAlbums));
+      setAdded(updatedStoredAlbums);
+      setSelected(false);
+    } catch (error) {
+      // Handle any errors that occur during database deletion
+      console.error("Error deleting album from the database:", error);
+      // You might want to show an error message to the user or retry the operation
+    }
   }
 
   return (
@@ -175,4 +185,5 @@ SelectedAlbum.propTypes = {
   setAdded: PropTypes.func.isRequired,
   setSelected: PropTypes.func.isRequired,
   addRatingToSong: PropTypes.func.isRequired,
+  deleteAlbumFromDatabase: PropTypes.func.isRequired,
 };

@@ -5,7 +5,7 @@ import Error from "../components/Error";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-function Home({ show, profile, addedAlbums, userRating, loading }) {
+function Home({ show, profile, addedAlbums, loading }) {
   const track = document.getElementById("image-track");
 
   const handleOnDown = (e) => (track.dataset.mouseDownAt = e.clientY);
@@ -92,17 +92,22 @@ function Home({ show, profile, addedAlbums, userRating, loading }) {
     }
   }, [inView]);
 
+  const [sortedAlbums, setSortedAlbums] = useState([]);
+  const [topThreeSongs, setTopThreeSongs] = useState([]);
+
   useEffect(() => {
-    console.log(userRating);
-  }, [userRating]);
+    if (loading) {
+      const sortedAlbums = addedAlbums
+        .filter((album) => typeof album.rating === "number") // Filter out albums without a rating
+        .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
+      setSortedAlbums(sortedAlbums);
 
-  const sortedAlbums = addedAlbums
-    .filter((album) => typeof album.rating === "number") // Filter out albums without a rating
-    .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
-
-  const songs = addedAlbums.map((album) => album.songs)[0];
-  const sortedSongs = songs.sort((a, b) => b.rating - a.rating);
-  const topThreeSongs = sortedSongs.slice(0, 3);
+      const songs = addedAlbums.map((album) => album.songs)[0];
+      const sortedSongs = songs.sort((a, b) => b.rating - a.rating);
+      const topThreeSongs = sortedSongs.slice(0, 3);
+      setTopThreeSongs(topThreeSongs);
+    }
+  }, [loading, addedAlbums]);
 
   return (
     <>
@@ -115,8 +120,8 @@ function Home({ show, profile, addedAlbums, userRating, loading }) {
               <img
                 draggable="false  "
                 className="blur user-select"
-                src={addedAlbums[clickedIndex]?.image}
-                alt={addedAlbums[clickedIndex]?.name}
+                src={sortedAlbums[clickedIndex]?.image}
+                alt={sortedAlbums[clickedIndex]?.name}
               />
             )}
           </div>
