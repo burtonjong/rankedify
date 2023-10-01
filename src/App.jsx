@@ -48,8 +48,6 @@ function App() {
         httpOnly: false,
       });
     }
-    const one = Cookies.get("access_token");
-    console.log(one);
     setShow(true);
 
     // const storedAddedAlbums = localStorage.getItem("addedAlbums");
@@ -83,6 +81,19 @@ function App() {
       throw new Error(data.error_description || "Failed to refresh token");
     }
   }
+
+  useEffect(() => {
+    const tokenRefreshInterval = setInterval(() => {
+      const refreshToken = Cookies.get("access_token");
+      refreshToken(refreshToken);
+      console.log("Token refreshed.");
+    }, 3500 * 1000); // Convert seconds to milliseconds
+
+    // Optionally, clear the interval when the component unmounts
+    return () => {
+      clearInterval(tokenRefreshInterval);
+    };
+  }, []);
 
   async function deleteAlbumFromDatabase(albumId) {
     try {
@@ -179,7 +190,7 @@ function App() {
             });
           }
 
-          console.log("Profile has been fetched", profile);
+          console.log("Profile has been fetched");
         } catch (error) {
           console.error("Error updating added albums:", error);
         }
@@ -205,7 +216,6 @@ function App() {
     async function fetchUserProfile(accessToken) {
       try {
         const profileData = await fetchProfile(accessToken);
-        console.log(profileData);
         setProfile(profileData);
         setProfileIsFetched(true);
 
@@ -226,7 +236,6 @@ function App() {
             addedAlbums: added, // if they don't exist
           });
         }
-        console.log("Doc", userDocRef);
         setLoading(true);
       } catch (error) {
         if (error.message === "Access token expired") {

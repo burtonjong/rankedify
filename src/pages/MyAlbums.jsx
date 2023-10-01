@@ -53,7 +53,12 @@ function MyAlbums({
           <Navbar profile={profile} />
           <main className="box-container">
             <div className="box">
-              <AlbumSearch query1={query1} setQuery1={setQuery1} />
+              {addedAlbums.length > 0 ? (
+                <AlbumSearch query1={query1} setQuery1={setQuery1} />
+              ) : (
+                <h1>Search for an album to add to your collection!</h1>
+              )}
+
               {loading ? (
                 <ul className="list list-albums">
                   {filteredAlbums.map((album, index) => (
