@@ -34,11 +34,13 @@ export default function SongStarRating({
   addedAlbums,
   selectedAlbum,
   addRatingToSong,
+  handleRatingChange,
 }) {
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
 
   function handleRating(rating) {
+    handleRatingChange();
     setRating(rating);
     setSongRating(rating);
 
@@ -83,6 +85,7 @@ export default function SongStarRating({
     localStorage.setItem("addedAlbums", JSON.stringify(updatedStoredAlbums));
     // READ PLEASE NEED TO NOW CONNECT TO FIRESTORE>>>> YAY!!!!
     addRatingToSong(songid, rating, selectedAlbum);
+    setSongRating(null);
   }
 
   const textStyle = {

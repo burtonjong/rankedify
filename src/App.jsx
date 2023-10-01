@@ -131,7 +131,7 @@ function App() {
         if (album.id === albumId) {
           // 3. Update the rating for the matching object
 
-          album.rating = rating;
+          album.rating = Number(rating);
           console.log(album.rating);
         }
         return album;

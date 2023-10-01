@@ -1,34 +1,66 @@
 import PropTypes from "prop-types";
-import StarRating from "./StarRating";
+
 import SongStarRating from "./SongStarRating";
 import { useEffect, useState } from "react";
 
 function SelectedAlbum({
   selectedAlbum,
-  setUserRating,
   selected,
-  addRatingToAlbum,
   addedAlbums,
   setAdded,
   setSelected,
   addRatingToSong,
+  addRatingToAlbum,
 }) {
   const [songRating, setSongRating] = useState(null);
-  const [finalRating, setFinalRating] = useState(null);
+  const [ratingKey, setRatingKey] = useState(0);
+
+  const handleFull = () => {
+    setRatingKey(ratingKey + 1);
+  };
 
   useEffect(() => {
     const songs = selectedAlbum.songs;
-    const nullCheck = songs.every((song) => song.rating !== null);
-    if (nullCheck) {
-      const totalRating = songs.reduce((acc, song) => {
-        return acc + song.rating;
-      }, 0);
-      const finalRate = (totalRating / songs.length).toFixed(1);
-      setFinalRating(finalRate);
+    if (songs) {
+      const nullCheck = songs.every((song) => song.rating !== null);
+      if (nullCheck) {
+        const totalRating = songs.reduce((acc, song) => {
+          return acc + song.rating;
+        }, 0);
+        const finalRate = (totalRating / songs.length).toFixed(1);
+        const stateAlbum = addedAlbums.find(
+          (album) => album.id === selectedAlbum.id
+        );
+        stateAlbum.rating = finalRate;
+
+        const storedAlbums =
+          JSON.parse(localStorage.getItem("addedAlbums")) || {};
+        const targetAlbum = storedAlbums.find(
+          (album) => album.id === selectedAlbum.id
+        );
+        targetAlbum.rating = finalRate; // Replace newRating with the new rating value
+
+        // Update the storedAlbums array in local storage
+        const updatedStoredAlbums = storedAlbums.map((album) =>
+          album.id === targetAlbum.id ? targetAlbum : album
+        );
+
+        // Save the updated storedAlbums array back to local storage
+        localStorage.setItem(
+          "addedAlbums",
+          JSON.stringify(updatedStoredAlbums)
+        );
+
+        // Log the updated object
+        console.log(updatedStoredAlbums);
+
+        addRatingToAlbum(selectedAlbum.id, Number(finalRate));
+        handleFull();
+      }
     } else {
       return;
     }
-  }, [songRating]);
+  }, [songRating, selectedAlbum]);
 
   // Find the album in addedAlbums by its id
   const albumInAddedAlbums = addedAlbums.find(
@@ -59,16 +91,11 @@ function SelectedAlbum({
           />
           <h1>{selectedAlbum.name}</h1>
           {albumInAddedAlbums && albumInAddedAlbums.rating ? (
-            <h1>You rated this album a {finalRating}</h1>
+            <h1 key={ratingKey}>
+              You rated this album a {selectedAlbum.rating}
+            </h1>
           ) : (
-            <StarRating
-              maxRating={10}
-              size={38}
-              onSetRating={setUserRating}
-              id={selectedAlbum.id}
-              addRatingToAlbum={addRatingToAlbum}
-              addedAlbums={addedAlbums}
-            />
+            <span>Rate all albums first to see your final rating</span>
           )}
           <h1 onClick={onDelete}>Remove this album</h1>
           <div>
@@ -78,7 +105,7 @@ function SelectedAlbum({
                 addedAlbums={addedAlbums}
                 selectedAlbum={selectedAlbum}
                 addRatingToSong={addRatingToSong}
-                key={song.id}
+                key={song.songid}
                 setSongRating={setSongRating}
               />
             ))}
@@ -101,14 +128,19 @@ function SongRating({
   selectedAlbum,
   addRatingToSong,
   setSongRating,
+  songKey,
 }) {
+  const [ratingKey, setRatingKey] = useState(songKey);
+  const handleRatingChange = () => {
+    setRatingKey(ratingKey + "a");
+  };
   return (
     <>
       <h1>{song.name}</h1>
-      {song.rating ? (
-        <span>You rated this song a {song.rating}</span>
+      {song.rating !== null ? (
+        <span key={ratingKey}>You rated this song a {song.rating}</span>
       ) : (
-        <span>
+        <span key={ratingKey}>
           <SongStarRating
             maxRating={10}
             songid={song.songid}
@@ -116,6 +148,7 @@ function SongRating({
             addedAlbums={addedAlbums}
             selectedAlbum={selectedAlbum}
             addRatingToSong={addRatingToSong}
+            handleRatingChange={handleRatingChange}
           />
         </span>
       )}
@@ -130,6 +163,7 @@ SongRating.propTypes = {
   selectedAlbum: PropTypes.any,
   addRatingToSong: PropTypes.func.isRequired,
   setSongRating: PropTypes.func.isRequired,
+  songKey: PropTypes.any,
 };
 
 SelectedAlbum.propTypes = {
