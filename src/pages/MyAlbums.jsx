@@ -16,6 +16,7 @@ function MyAlbums({
   loading,
   addRatingToSong,
   deleteAlbumFromDatabase,
+  reRateSong,
 }) {
   const [selectedAlbum, setSelectedAlbum] = useState([]);
   const [selected, setSelected] = useState(false);
@@ -53,7 +54,12 @@ function MyAlbums({
           <Navbar profile={profile} />
           <main className="box-container">
             <div className="box">
-              <AlbumSearch query1={query1} setQuery1={setQuery1} />
+              {addedAlbums.length > 0 ? (
+                <AlbumSearch query1={query1} setQuery1={setQuery1} />
+              ) : (
+                <h1>Search for an album to add to your collection!</h1>
+              )}
+
               {loading ? (
                 <ul className="list list-albums">
                   {filteredAlbums.map((album, index) => (
@@ -80,6 +86,7 @@ function MyAlbums({
                 setAdded={setAdded}
                 addRatingToSong={addRatingToSong}
                 deleteAlbumFromDatabase={deleteAlbumFromDatabase}
+                reRateSong={reRateSong}
               />
             </div>
           </main>
@@ -99,6 +106,7 @@ MyAlbums.propTypes = {
   loading: PropTypes.bool.isRequired,
   addRatingToSong: PropTypes.func.isRequired,
   deleteAlbumFromDatabase: PropTypes.func.isRequired,
+  reRateSong: PropTypes.func.isRequired,
 };
 
 export default MyAlbums;

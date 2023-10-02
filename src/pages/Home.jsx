@@ -96,7 +96,7 @@ function Home({ show, profile, addedAlbums, loading }) {
   const [topThreeSongs, setTopThreeSongs] = useState([]);
 
   useEffect(() => {
-    if (loading) {
+    if (loading && addedAlbums.length > 0) {
       const sortedAlbums = addedAlbums
         .filter((album) => typeof album.rating === "number") // Filter out albums without a rating
         .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));

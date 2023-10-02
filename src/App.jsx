@@ -48,8 +48,6 @@ function App() {
         httpOnly: false,
       });
     }
-    const one = Cookies.get("access_token");
-    console.log(one);
     setShow(true);
 
     // const storedAddedAlbums = localStorage.getItem("addedAlbums");
@@ -84,6 +82,19 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    const tokenRefreshInterval = setInterval(() => {
+      const refreshToken = Cookies.get("access_token");
+      refreshToken(refreshToken);
+      console.log("Token refreshed.");
+    }, 3500 * 1000); // Convert seconds to milliseconds
+
+    // Optionally, clear the interval when the component unmounts
+    return () => {
+      clearInterval(tokenRefreshInterval);
+    };
+  }, []);
+
   async function deleteAlbumFromDatabase(albumId) {
     try {
       // 1. Retrieve the current user's data
@@ -111,16 +122,99 @@ function App() {
       const userDocRef = doc(db, "users", profile.id);
       const userDocSnapshot = await getDoc(userDocRef);
       const userData = userDocSnapshot.data().addedAlbums;
+
+      const updatedAlbums = userData.map((album) => {
+        if (album.id === selectedAlbum.id) {
+          const updatedSongs = album.songs.map((song) => {
+            if (song.songid === songid) {
+              // Update the song's rating
+              return {
+                ...song,
+                rating: rating,
+              };
+            }
+            return song;
+          });
+          album.songs = updatedSongs;
+        }
+        return album;
+      });
+
+      // Update the Firestore document with the modified addedAlbums array
+      await updateDoc(userDocRef, {
+        addedAlbums: updatedAlbums,
+      });
+
+      // Calculate the album's final rating when all songs are rated
+      const albumToUpdate = updatedAlbums.find(
+        (album) => album.id === selectedAlbum.id
+      );
+
+      const allSongsRated = albumToUpdate.songs.every(
+        (song) => song.rating !== null
+      );
+
+      if (allSongsRated) {
+        const totalRating = albumToUpdate.songs.reduce(
+          (acc, song) => acc + song.rating,
+          0
+        );
+        const finalRate = (totalRating / albumToUpdate.songs.length).toFixed(1);
+
+        // Update the album's rating
+        albumToUpdate.rating = Number(finalRate);
+
+        // Update the Firestore document with the modified addedAlbums array
+        await updateDoc(userDocRef, {
+          addedAlbums: updatedAlbums,
+        });
+
+        // Update local storage
+        const storedAlbums =
+          JSON.parse(localStorage.getItem("addedAlbums")) || [];
+        const targetAlbum = storedAlbums.find(
+          (album) => album.id === selectedAlbum.id
+        );
+        targetAlbum.rating = finalRate;
+
+        const updatedStoredAlbums = storedAlbums.map((album) =>
+          album.id === targetAlbum.id ? targetAlbum : album
+        );
+
+        localStorage.setItem(
+          "addedAlbums",
+          JSON.stringify(updatedStoredAlbums)
+        );
+        addRatingToAlbum(selectedAlbum.id, Number(finalRate));
+        setReRate(false);
+        // Call additional functions if needed
+        // e.g., addRatingToAlbum(selectedAlbum.id, Number(finalRate));
+        // e.g., handleFull();
+      }
+    } catch (error) {
+      console.error("Error adding rating:", error);
+    }
+  }
+
+  async function reRateSong(id, song, selectedAlbum) {
+    console.log(id);
+    console.log(song);
+
+    try {
+      // 1. Query Firestore to retrieve the document containing addedAlbums
+      const userDocRef = doc(db, "users", profile.id);
+      const userDocSnapshot = await getDoc(userDocRef);
+      const userData = userDocSnapshot.data().addedAlbums;
       console.log("userData", userData);
 
       const updatedAlbums = userData.map((album) => {
         if (album.id === selectedAlbum.id) {
           // 3. Update the rating for the matching object
           const updatedSongs = album.songs.map((song) => {
-            if (song.songid === songid) {
+            if (song.songid === id) {
               return {
                 ...song,
-                rating: rating,
+                rating: null,
               };
             }
             return song;
@@ -162,7 +256,6 @@ function App() {
       await updateDoc(userDocRef, {
         addedAlbums: updatedAlbums,
       });
-      console.log("mewow");
     } catch (error) {
       console.error("Error adding rating:", error);
     }
@@ -179,7 +272,7 @@ function App() {
             });
           }
 
-          console.log("Profile has been fetched", profile);
+          console.log("Profile has been fetched");
         } catch (error) {
           console.error("Error updating added albums:", error);
         }
@@ -205,7 +298,6 @@ function App() {
     async function fetchUserProfile(accessToken) {
       try {
         const profileData = await fetchProfile(accessToken);
-        console.log(profileData);
         setProfile(profileData);
         setProfileIsFetched(true);
 
@@ -226,7 +318,6 @@ function App() {
             addedAlbums: added, // if they don't exist
           });
         }
-        console.log("Doc", userDocRef);
         setLoading(true);
       } catch (error) {
         if (error.message === "Access token expired") {
@@ -350,6 +441,9 @@ function App() {
                 loading={loading}
                 addRatingToSong={addRatingToSong}
                 deleteAlbumFromDatabase={deleteAlbumFromDatabase}
+                reRateSong={reRateSong}
+                setReRate={setReRate}
+                reRate={reRate}
               />
             }
           />

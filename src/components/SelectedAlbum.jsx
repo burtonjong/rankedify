@@ -10,63 +10,19 @@ function SelectedAlbum({
   setAdded,
   setSelected,
   addRatingToSong,
-  addRatingToAlbum,
   deleteAlbumFromDatabase,
+  reRateSong,
 }) {
   const [songRating, setSongRating] = useState(null);
-  const [ratingKey, setRatingKey] = useState(0);
 
-  const handleFull = () => {
-    setRatingKey(ratingKey + 1);
-  };
-
-  useEffect(() => {
-    const songs = selectedAlbum.songs;
-    if (songs) {
-      const nullCheck = songs.every((song) => song.rating !== null);
-      if (nullCheck) {
-        const totalRating = songs.reduce((acc, song) => {
-          return acc + song.rating;
-        }, 0);
-        const finalRate = (totalRating / songs.length).toFixed(1);
-        const stateAlbum = addedAlbums.find(
-          (album) => album.id === selectedAlbum.id
-        );
-        stateAlbum.rating = finalRate;
-
-        const storedAlbums =
-          JSON.parse(localStorage.getItem("addedAlbums")) || {};
-        const targetAlbum = storedAlbums.find(
-          (album) => album.id === selectedAlbum.id
-        );
-        targetAlbum.rating = finalRate; // Replace newRating with the new rating value
-
-        // Update the storedAlbums array in local storage
-        const updatedStoredAlbums = storedAlbums.map((album) =>
-          album.id === targetAlbum.id ? targetAlbum : album
-        );
-
-        // Save the updated storedAlbums array back to local storage
-        localStorage.setItem(
-          "addedAlbums",
-          JSON.stringify(updatedStoredAlbums)
-        );
-
-        // Log the updated object
-        console.log(updatedStoredAlbums);
-
-        addRatingToAlbum(selectedAlbum.id, Number(finalRate));
-        handleFull();
-      }
-    } else {
-      return;
-    }
-  }, [songRating, selectedAlbum]);
+  const [editKey, setEditKey] = useState(0);
 
   // Find the album in addedAlbums by its id
   const albumInAddedAlbums = addedAlbums.find(
     (album) => album.id === selectedAlbum.id
   );
+
+  console.log(selectedAlbum);
 
   async function onDelete() {
     try {
@@ -117,6 +73,10 @@ function SelectedAlbum({
                 addRatingToSong={addRatingToSong}
                 key={song.songid}
                 setSongRating={setSongRating}
+                rating={songRating}
+                reRateSong={reRateSong}
+                editKey={editKey}
+                setEditKey={setEditKey}
               />
             ))}
           </div>
@@ -139,16 +99,71 @@ function SongRating({
   addRatingToSong,
   setSongRating,
   songKey,
+  reRateSong,
+  editKey,
+  setEditKey,
+  rating,
 }) {
   const [ratingKey, setRatingKey] = useState(songKey);
+
   const handleRatingChange = () => {
     setRatingKey(ratingKey + "a");
+    setSongRating(rating + 1);
   };
+
+  const handleClick = () => {
+    setEditKey(editKey + 1);
+    reRateSong(song.songid, song, selectedAlbum);
+
+    const targetSong = addedAlbums
+      .find((album) => album.id === selectedAlbum.id)
+      ?.songs.find((songk) => songk.songid === song.songid);
+    targetSong.rating = null;
+
+    const storedAlbums = JSON.parse(localStorage.getItem("addedAlbums")) || {};
+    const localStorageTarget = storedAlbums
+      .find((album) => album.id === selectedAlbum.id)
+      ?.songs.find((songk) => songk.songid === song.songid);
+    console.log(localStorageTarget);
+    localStorageTarget.rating = null;
+    console.log(localStorageTarget);
+
+    // Update the storedAlbums array in local storage
+    const updatedStoredAlbums = storedAlbums.map((album) => {
+      if (album.id === selectedAlbum.id) {
+        const updatedSongs = album.songs.map((song) => {
+          // Changed 'songk' to 'song'
+          if (song.songid === localStorageTarget.songid) {
+            return {
+              ...song,
+              rating: null,
+            };
+          }
+          return song;
+        });
+
+        return {
+          ...album,
+          songs: updatedSongs,
+        };
+      }
+      return album;
+    });
+
+    console.log(updatedStoredAlbums);
+
+    // Save the updated storedAlbums array back to local storage
+    localStorage.setItem("addedAlbums", JSON.stringify(updatedStoredAlbums));
+  };
+
   return (
     <>
       <h1>{song.name}</h1>
       {song.rating !== null ? (
-        <span key={ratingKey}>You rated this song a {song.rating}</span>
+        <>
+          <span key={ratingKey}>You rated this song a {song.rating}</span>
+          <span onClick={handleClick}> Edit</span>
+        </>
       ) : (
         <span key={ratingKey}>
           <SongStarRating
@@ -159,6 +174,7 @@ function SongRating({
             selectedAlbum={selectedAlbum}
             addRatingToSong={addRatingToSong}
             handleRatingChange={handleRatingChange}
+            key={editKey}
           />
         </span>
       )}
@@ -174,6 +190,10 @@ SongRating.propTypes = {
   addRatingToSong: PropTypes.func.isRequired,
   setSongRating: PropTypes.func.isRequired,
   songKey: PropTypes.any,
+  reRateSong: PropTypes.func.isRequired,
+  editKey: PropTypes.any,
+  setEditKey: PropTypes.func.isRequired,
+  rating: PropTypes.any,
 };
 
 SelectedAlbum.propTypes = {
@@ -186,4 +206,5 @@ SelectedAlbum.propTypes = {
   setSelected: PropTypes.func.isRequired,
   addRatingToSong: PropTypes.func.isRequired,
   deleteAlbumFromDatabase: PropTypes.func.isRequired,
+  reRateSong: PropTypes.func.isRequired,
 };
