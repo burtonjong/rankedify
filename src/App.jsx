@@ -186,7 +186,6 @@ function App() {
           JSON.stringify(updatedStoredAlbums)
         );
         addRatingToAlbum(selectedAlbum.id, Number(finalRate));
-        setReRate(false);
         // Call additional functions if needed
         // e.g., addRatingToAlbum(selectedAlbum.id, Number(finalRate));
         // e.g., handleFull();
@@ -442,8 +441,6 @@ function App() {
                 addRatingToSong={addRatingToSong}
                 deleteAlbumFromDatabase={deleteAlbumFromDatabase}
                 reRateSong={reRateSong}
-                setReRate={setReRate}
-                reRate={reRate}
               />
             }
           />

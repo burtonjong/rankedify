@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 import SongStarRating from "./SongStarRating";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function SelectedAlbum({
   selectedAlbum,
@@ -57,9 +57,7 @@ function SelectedAlbum({
           />
           <h1>{selectedAlbum.name}</h1>
           {albumInAddedAlbums && albumInAddedAlbums.rating ? (
-            <h1 key={ratingKey}>
-              You rated this album a {selectedAlbum.rating}
-            </h1>
+            <h1>You rated this album a {selectedAlbum.rating}</h1>
           ) : (
             <span>Rate all albums first to see your final rating</span>
           )}
