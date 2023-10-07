@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import PropTypes from "prop-types";
 import Navbar from "../components/Navbar";
 import Error from "../components/Error";
@@ -17,14 +18,23 @@ function MyAlbums({
   addRatingToSong,
   deleteAlbumFromDatabase,
   reRateSong,
+  // eslint-disable-next-line react/prop-types
+  selectedAlbum,
+  // eslint-disable-next-line react/prop-types
+  setSelectedAlbum,
 }) {
-  const [selectedAlbum, setSelectedAlbum] = useState([]);
   const [selected, setSelected] = useState(false);
   const [query1, setQuery1] = useState("");
 
   const handleClick = (album) => {
-    setSelectedAlbum(album);
-    setSelected(true);
+    if (selectedAlbum.id === album.id) {
+      return;
+    } else {
+      console.log(album);
+      console.log(selectedAlbum);
+      setSelectedAlbum(album);
+      setSelected(true);
+    }
   };
 
   const [filteredAlbums, setFilteredAlbums] = useState(addedAlbums);
@@ -87,6 +97,7 @@ function MyAlbums({
                 addRatingToSong={addRatingToSong}
                 deleteAlbumFromDatabase={deleteAlbumFromDatabase}
                 reRateSong={reRateSong}
+                setSelectedAlbum={setSelectedAlbum}
               />
             </div>
           </main>

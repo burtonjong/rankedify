@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 import SongStarRating from "./SongStarRating";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function SelectedAlbum({
   selectedAlbum,
@@ -12,6 +12,8 @@ function SelectedAlbum({
   addRatingToSong,
   deleteAlbumFromDatabase,
   reRateSong,
+  // eslint-disable-next-line react/prop-types
+  setSelectedAlbum,
 }) {
   const [songRating, setSongRating] = useState(null);
 
@@ -46,6 +48,12 @@ function SelectedAlbum({
     }
   }
 
+  useEffect(() => {
+    if (selectedAlbum.rating) {
+      console.log(selectedAlbum.rating);
+    }
+  }, [selectedAlbum]);
+
   return (
     <>
       {selected ? (
@@ -75,6 +83,7 @@ function SelectedAlbum({
                 reRateSong={reRateSong}
                 editKey={editKey}
                 setEditKey={setEditKey}
+                setSelectedAlbum={setSelectedAlbum}
               />
             ))}
           </div>
@@ -95,28 +104,34 @@ function SongRating({
   addedAlbums,
   selectedAlbum,
   addRatingToSong,
-  setSongRating,
   songKey,
   reRateSong,
   editKey,
   setEditKey,
-  rating,
+  // eslint-disable-next-line react/prop-types
+  setSelectedAlbum,
 }) {
   const [ratingKey, setRatingKey] = useState(songKey);
 
   const handleRatingChange = () => {
     setRatingKey(ratingKey + "a");
-    setSongRating(rating + 1);
   };
 
   const handleClick = () => {
     setEditKey(editKey + 1);
-    reRateSong(song.songid, song, selectedAlbum);
 
-    const targetSong = addedAlbums
-      .find((album) => album.id === selectedAlbum.id)
-      ?.songs.find((songk) => songk.songid === song.songid);
-    targetSong.rating = null;
+    const updatedSelectedAlbum = { ...selectedAlbum }; // Create a shallow copy of the selectedAlbum
+    const targetSongIndex = updatedSelectedAlbum.songs.findIndex(
+      (songk) => songk.songid === song.songid
+    );
+
+    if (targetSongIndex !== -1) {
+      // If the song is found in the selectedAlbum's songs array
+      updatedSelectedAlbum.songs[targetSongIndex].rating = null;
+      setSelectedAlbum(updatedSelectedAlbum); // Update the state with the modified selectedAlbum
+    }
+
+    console.log(selectedAlbum);
 
     const storedAlbums = JSON.parse(localStorage.getItem("addedAlbums")) || {};
     const localStorageTarget = storedAlbums
@@ -152,6 +167,7 @@ function SongRating({
 
     // Save the updated storedAlbums array back to local storage
     localStorage.setItem("addedAlbums", JSON.stringify(updatedStoredAlbums));
+    reRateSong(song.songid, song, selectedAlbum);
   };
 
   return (
@@ -167,12 +183,12 @@ function SongRating({
           <SongStarRating
             maxRating={10}
             songid={song.songid}
-            setSongRating={setSongRating}
             addedAlbums={addedAlbums}
             selectedAlbum={selectedAlbum}
             addRatingToSong={addRatingToSong}
             handleRatingChange={handleRatingChange}
             key={editKey}
+            setSelectedAlbum={setSelectedAlbum}
           />
         </span>
       )}
@@ -186,7 +202,6 @@ SongRating.propTypes = {
   addedAlbums: PropTypes.any,
   selectedAlbum: PropTypes.any,
   addRatingToSong: PropTypes.func.isRequired,
-  setSongRating: PropTypes.func.isRequired,
   songKey: PropTypes.any,
   reRateSong: PropTypes.func.isRequired,
   editKey: PropTypes.any,

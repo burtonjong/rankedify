@@ -20,6 +20,7 @@ function App() {
   const [show, setShow] = useState(false);
   const [profileIsFetched, setProfileIsFetched] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedAlbum, setSelectedAlbum] = useState([]);
 
   const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
   const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
@@ -185,7 +186,7 @@ function App() {
           "addedAlbums",
           JSON.stringify(updatedStoredAlbums)
         );
-        addRatingToAlbum(selectedAlbum.id, Number(finalRate));
+        await addRatingToAlbum(selectedAlbum.id, Number(finalRate));
         // Call additional functions if needed
         // e.g., addRatingToAlbum(selectedAlbum.id, Number(finalRate));
         // e.g., handleFull();
@@ -196,9 +197,6 @@ function App() {
   }
 
   async function reRateSong(id, song, selectedAlbum) {
-    console.log(id);
-    console.log(song);
-
     try {
       // 1. Query Firestore to retrieve the document containing addedAlbums
       const userDocRef = doc(db, "users", profile.id);
@@ -255,6 +253,11 @@ function App() {
       await updateDoc(userDocRef, {
         addedAlbums: updatedAlbums,
       });
+      const update = updatedAlbums.find(
+        (album) => album.id === selectedAlbum.id
+      );
+      setSelectedAlbum(update);
+      setAdded(updatedAlbums);
     } catch (error) {
       console.error("Error adding rating:", error);
     }
@@ -441,6 +444,8 @@ function App() {
                 addRatingToSong={addRatingToSong}
                 deleteAlbumFromDatabase={deleteAlbumFromDatabase}
                 reRateSong={reRateSong}
+                setSelectedAlbum={setSelectedAlbum}
+                selectedAlbum={selectedAlbum}
               />
             }
           />
