@@ -6,12 +6,13 @@ function Error() {
   const logout = () => {
     navigate("/");
   };
+
   return (
     <div>
       <div className="failed">
         <a href="#" onClick={logout}>
           <div className="error-message">
-            <h1 className="ta-center">Invalid token.</h1>
+            <h1 className="ta-center">Your session has expired.</h1>
             <h1>Please try and login again.</h1>
           </div>
         </a>

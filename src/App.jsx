@@ -31,30 +31,32 @@ function App() {
 
   useEffect(() => {
     const hash = window.location.hash;
-    let token = "";
+    let accessToken = "";
+    let refreshToken = "";
 
-    // getToken()
-
-    if (!token && hash) {
-      token = hash
-        .substring(1)
-        .split("&")
-        .find((elem) => elem.startsWith("access_token"))
-        .split("=")[1];
+    if (hash) {
+      const hashParams = new URLSearchParams(hash.substring(1));
+      accessToken = hashParams.get("access_token");
+      refreshToken = hashParams.get("refresh_token");
 
       window.location.hash = "";
-      // window.localStorage.setItem("token", token);
-      Cookies.set("access_token", token, {
-        secure: true,
-        httpOnly: false,
-      });
-    }
-    setShow(true);
 
-    // const storedAddedAlbums = localStorage.getItem("addedAlbums");
-    // if (storedAddedAlbums) {
-    //   setAdded(JSON.parse(storedAddedAlbums));
-    // }
+      if (accessToken) {
+        Cookies.set("access_token", accessToken, {
+          secure: true,
+          httpOnly: false,
+        });
+      }
+
+      if (refreshToken) {
+        Cookies.set("refresh_token", refreshToken, {
+          secure: true,
+          httpOnly: false,
+        });
+      }
+    }
+
+    setShow(true);
   }, []);
 
   // console.log(token);
@@ -75,26 +77,13 @@ function App() {
     });
 
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
     if (response.ok) {
       return data.access_token; // Return the new access token
     } else {
       throw new Error(data.error_description || "Failed to refresh token");
     }
   }
-
-  useEffect(() => {
-    const tokenRefreshInterval = setInterval(() => {
-      const refreshToken = Cookies.get("access_token");
-      refreshToken(refreshToken);
-      console.log("Token refreshed.");
-    }, 3500 * 1000); // Convert seconds to milliseconds
-
-    // Optionally, clear the interval when the component unmounts
-    return () => {
-      clearInterval(tokenRefreshInterval);
-    };
-  }, []);
 
   async function deleteAlbumFromDatabase(albumId) {
     try {
@@ -289,12 +278,28 @@ function App() {
     const token = Cookies.get("access_token");
 
     async function fetchProfile(token) {
-      const result = await fetch("https://api.spotify.com/v1/me", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      try {
+        const result = await fetch("https://api.spotify.com/v1/me", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-      return await result.json();
+        if (result.status === 401) {
+          setShow(false);
+        }
+
+        if (result.ok) {
+          // Successfully fetched user data with the original token
+          return await result.json();
+        } else {
+          // Handle other non-401 errors here if needed
+          throw new Error("Failed to fetch user data.");
+        }
+      } catch (error) {
+        // Handle errors here
+        console.error("Error fetching user data:", error);
+        throw error;
+      }
     }
 
     async function fetchUserProfile(accessToken) {
