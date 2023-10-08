@@ -101,13 +101,19 @@ function Home({ show, profile, addedAlbums, loading }) {
         .filter((album) => typeof album.rating === "number") // Filter out albums without a rating
         .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
       setSortedAlbums(sortedAlbums);
-
-      const songs = addedAlbums.map((album) => album.songs)[0];
-      const sortedSongs = songs.sort((a, b) => b.rating - a.rating);
-      const topThreeSongs = sortedSongs.slice(0, 3);
-      setTopThreeSongs(topThreeSongs);
+      console.log(clickedIndex);
+      if (clickedIndex != null) {
+        const selectedAlb = addedAlbums.find(
+          (album) => album === sortedAlbums[clickedIndex]
+        );
+        const songs = selectedAlb.songs;
+        const sortedSongs = songs.sort((a, b) => b.rating - a.rating);
+        const topThreeSongs = sortedSongs.slice(0, 3);
+        console.log(topThreeSongs);
+        setTopThreeSongs(topThreeSongs);
+      }
     }
-  }, [loading, addedAlbums]);
+  }, [loading, addedAlbums, clickedIndex]);
 
   return (
     <>
@@ -128,7 +134,7 @@ function Home({ show, profile, addedAlbums, loading }) {
 
           <Navbar profile={profile} />
           <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
-            {addedAlbums.length > 0 ? (
+            {sortedAlbums.length > 0 ? (
               <>
                 <h1 className="image-title" ref={ref}>
                   {loading ? "Check out your top 10." : "Loading..."}
@@ -164,6 +170,28 @@ function Home({ show, profile, addedAlbums, loading }) {
                             </>
                           ))}
                         </ul>
+                        <a
+                          href={album.external_urls}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex row"
+                        >
+                          <span>
+                            {" "}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="48"
+                              height="48"
+                              viewBox="0 0 256 256"
+                            >
+                              <path
+                                fill="white"
+                                d="m229.66 109.66l-48 48a8 8 0 0 1-11.32-11.32L204.69 112H165a88 88 0 0 0-85.23 66a8 8 0 0 1-15.5-4A103.94 103.94 0 0 1 165 96h39.71l-34.37-34.34a8 8 0 0 1 11.32-11.32l48 48a8 8 0 0 1 0 11.32ZM192 208H40V88a8 8 0 0 0-16 0v120a16 16 0 0 0 16 16h152a8 8 0 0 0 0-16Z"
+                              />
+                            </svg>
+                          </span>
+                          <h2> Listen on Spotify</h2>
+                        </a>
                       </div>
                     )}
                   </div>
@@ -171,7 +199,7 @@ function Home({ show, profile, addedAlbums, loading }) {
               </>
             ) : (
               <h1 className="ta-center image-title moved">
-                {loading ? "You dont have any albums yet." : "Loading..."}
+                {loading ? "Rate an album to see your top 10." : "Loading..."}
               </h1>
             )}
           </div>

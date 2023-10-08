@@ -58,6 +58,26 @@ body {
   background: var(--middle-main-color);
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  width: 100%;
+}
+
+ul {
+  list-style-type: none;
+}
+
 /* Navbar ---------------------------------------------------------------------------------------------------------------------*/
 
 main {
@@ -149,6 +169,33 @@ main {
   transform: scaleX(-1);
 }
 
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--middle-main-color);
+  min-width: 160px;
+  box-shadow: 0px -8px 16px 0px rgba(0, 0, 0, 0.2); /* Negative Y offset */
+  z-index: 1;
+  bottom: 90%; /* Position above the button */
+  border-radius: 5%;
+}
+
+.nav-link2 {
+  display: flex;
+  align-items: center;
+  height: 3rem;
+  color: white;
+  text-decoration: none;
+  filter: grayscale(100%);
+  transition: var(--transition-speed);
+  border-color: var(--middark-main-color);
+}
+
+.nav-link:hover .dropdown-content {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Buttons ---------------------------------------------------------------------------------------------------------------------*/
 
 .btn-add {
@@ -198,13 +245,16 @@ main {
   font-family: "DM Sans", sans-serif;
   justify-self: center;
   border: none;
-  padding: 1.1rem 1.6rem;
+  padding: 1.6rem 1.6rem;
   font-size: 1.3rem;
-  border-radius: 0.9rem;
   width: 40rem;
   transition: all 0.3s;
   color: var(--text-primary);
   background-color: var(--dark-main-color);
+}
+
+input::placeholder {
+  color: white; /* You can use any color value you prefer */
 }
 
 .container-search {
@@ -367,11 +417,7 @@ main {
 
 .blur {
   position: absolute;
-  filter: blur(4px);
-  -webkit-filter: blur(4px);
-  -moz-filter: blur(4px);
-  -o-filter: blur(4px);
-  -ms-filter: blur(4px);
+  left: 5.05rem;
   display: flex;
 
   height: 100%;
@@ -439,6 +485,10 @@ main {
   box-shadow: 0 2.4rem 2.4rem rgba(0, 0, 0, 1);
 }
 
+ul .album-list {
+  margin: 0;
+}
+
 .album-desc {
   display: flex;
   flex-direction: column;
@@ -454,6 +504,7 @@ main {
 .album-container {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   gap: 2rem;
   flex-wrap: wrap;
 }
@@ -463,6 +514,10 @@ main {
   height: 200px;
   object-fit: cover;
   border-radius: 1rem;
+}
+
+.autofit {
+  width: 90%;
 }
 
 /* Mylist container -----------------------------------------------------------------------------------------------------------*/
@@ -501,8 +556,9 @@ main {
 
 .list {
   list-style: none;
-  padding: 0.8rem 0;
+  padding: 0;
   overflow: hidden;
+  margin: 0;
 }
 
 .list li {
@@ -541,8 +597,8 @@ main {
 }
 
 .selected-image {
-  width: 400px;
-  height: 400px;
+  width: 300px;
+  height: 300px;
   object-fit: cover;
   border-radius: 1rem;
   margin-top: 3rem;
@@ -558,6 +614,55 @@ main {
   align-content: center;
   flex-direction: column;
   flex-wrap: wrap;
+}
+
+/*Song container ----------------------------------------------------------------------*/
+
+.notsowide {
+  width: auto;
+}
+
+.song-container {
+  display: block;
+  gap: 1rem;
+  background-color: var(--middark-main-color);
+  overflow-y: scroll;
+  height: 40rem;
+  width: 100%;
+}
+
+.song-container > ul {
+  margin: 0;
+  padding: 0;
+}
+
+.song-list {
+  width: 100%;
+  padding-bottom: 1.66rem;
+  transition: var(--transition-speed);
+}
+
+.song-list:hover {
+  background-color: var(--dark-main-color);
+}
+
+.infobox-box {
+  background-color: var(--middark-main-color);
+  padding: 0 1rem 0 1rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  height: 3rem;
+  transition: var(--transition-speed);
+}
+
+.infobox-box:hover {
+  background-color: var(--dark-main-color);
+}
+
+.other > .infobox-box {
+  background-color: var(--middle-main-color);
+  width: 50%;
 }
 
 /* Media Queries */
@@ -647,4 +752,16 @@ main {
 
 .user-select {
   user-select: none;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.gap-p5 {
+  gap: 0.5rem;
+}
+
+.gap3 {
+  gap: 3rem;
 }

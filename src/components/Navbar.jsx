@@ -1,12 +1,25 @@
 import PropTypes from "prop-types";
 import { useNavigate, Link } from "react-router-dom";
 
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase";
+
 function Navbar({ profile }) {
   const navigate = useNavigate();
 
   const logout = () => {
     navigate("/");
   };
+
+  async function deleteAccount() {
+    try {
+      await deleteDoc(doc(db, "users", profile.id));
+      console.log("Success deleting account");
+      navigate("/#");
+    } catch (error) {
+      console.error("Error deleting account:", error);
+    }
+  }
 
   return (
     <>
@@ -60,22 +73,37 @@ function Navbar({ profile }) {
             </Link>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link profile-image" onClick={logout}>
-              {profile && profile.images && profile.images.length > 0 && (
-                <img
-                  className="svg-hover user-select"
-                  src={profile.images[0].url}
-                  alt="Profile"
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    borderRadius: "50%",
-                  }}
-                />
-              )}
-
-              <span className="link-text">Logout</span>
-            </a>
+            <button>
+              <div className="nav-link profile-image jc-center">
+                {profile && profile.images && profile.images.length > 0 && (
+                  <img
+                    className="svg-hover user-select"
+                    src={profile.images[0].url}
+                    alt="Profile"
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                )}
+                <div className="dropdown-content">
+                  <a href="#" className="nav-link2 jc-center" onClick={logout}>
+                    Logout
+                  </a>
+                  <a
+                    href="https://www.spotify.com/us/account/apps/"
+                    className="nav-link2 jc-center"
+                    onClick={deleteAccount}
+                  >
+                    Delete Account
+                  </a>
+                  <a href="#" className="nav-link2 jc-center">
+                    About
+                  </a>
+                </div>
+              </div>
+            </button>
           </li>
         </ul>
       </nav>

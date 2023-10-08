@@ -26,7 +26,7 @@ function App() {
   const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "token";
-  const CLIENT_SECRET = "4195754e67d84c5592aa09d799685dd9";
+  const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET;
   const SCOPE = "user-read-recently-played user-library-read user-top-read";
 
   useEffect(() => {

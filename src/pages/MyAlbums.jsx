@@ -67,7 +67,13 @@ function MyAlbums({
               {addedAlbums.length > 0 ? (
                 <AlbumSearch query1={query1} setQuery1={setQuery1} />
               ) : (
-                <h1>Search for an album to add to your collection!</h1>
+                <>
+                  <div className="flex jc-center ai-center">
+                    <h1 className="ta-center">
+                      Search for an album to add to your collection!
+                    </h1>
+                  </div>
+                </>
               )}
 
               {loading ? (
