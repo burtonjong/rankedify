@@ -38,20 +38,21 @@ function App() {
       const hashParams = new URLSearchParams(hash.substring(1));
       accessToken = hashParams.get("access_token");
       refreshToken = hashParams.get("refresh_token");
+      console.log("token set");
 
       window.location.hash = "";
 
       if (accessToken) {
         Cookies.set("access_token", accessToken, {
           secure: true,
-          httpOnly: false,
+          httpOnly: true,
         });
       }
 
       if (refreshToken) {
         Cookies.set("refresh_token", refreshToken, {
           secure: true,
-          httpOnly: false,
+          httpOnly: true,
         });
       }
     }
