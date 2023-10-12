@@ -8,6 +8,7 @@ function Login({
   RESPONSE_TYPE,
   SCOPE,
 }) {
+  console.log(REDIRECT_URI);
   return (
     <>
       <div className="container-login spacer flex column">
@@ -42,7 +43,7 @@ function Login({
           <div className="wave wave2"></div>
           <div className="wave wave3"></div>
           <div className="wave wave4"></div>
-        </section>  
+        </section>
       </div>
       <Footer />
     </>
