@@ -295,7 +295,7 @@ input::placeholder {
   height: 60px;
   background-color: var(--dark-main-color);
   border-radius: 12px;
-  margin-left: 150px;
+  margin-left: 10.5%;
 }
 
 .spacer {
