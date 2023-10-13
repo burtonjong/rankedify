@@ -8,7 +8,6 @@ function Login({
   RESPONSE_TYPE,
   SCOPE,
 }) {
-  console.log(REDIRECT_URI);
   return (
     <>
       <div className="container-login spacer flex column">
