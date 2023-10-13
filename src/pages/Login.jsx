@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import Footer from "../components/Footer";
-import useState from "react";
 
 function Login({
   CLIENT_ID,
@@ -9,19 +8,6 @@ function Login({
   RESPONSE_TYPE,
   SCOPE,
 }) {
-  const [password, setPassword] = useState("");
-  const [yes, setYes] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent the default form submission
-
-    if (password === "5738") {
-      setYes(true);
-    } else {
-      alert("Password is incorrect."); // Password does not match
-    }
-  };
-
   return (
     <>
       <div className="container-login spacer flex column">
@@ -48,21 +34,7 @@ function Login({
           <a
             href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}
           >
-            {yes ? (
-              <h3 className="login-text">Login To Spotify</h3>
-            ) : (
-              <div>
-                <form onSubmit={handleSubmit}>
-                  <input
-                    type="password"
-                    placeholder="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <button type="submit">Submit</button>
-                </form>
-              </div>
-            )}
+            <h3 className="login-text">Login To Spotify</h3>
           </a>
         </div>
         <section className="wave-section">
