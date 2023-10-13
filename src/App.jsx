@@ -27,7 +27,7 @@ function App() {
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "token";
   const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET;
-  const SCOPE = "user-read-recently-played user-library-read user-top-read";
+  const SCOPE = "user-library-read";
 
   useEffect(() => {
     const hash = window.location.hash;
